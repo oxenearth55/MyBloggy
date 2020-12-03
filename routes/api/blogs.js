@@ -70,18 +70,20 @@ router.put('/:id', [auth,
 
     try{
         const blog = await Blog.findById(req.params.id);
+        if(!blog){
+            res.status(404).json({msg:'Blog not found'});
+        }
         //NOTE Check, Is this user his/her post
-        if(blog.user == req.user.id){
+        if(blog.user.toString() === req.user.id){
 
             blog.topic =topic; 
             blog.type = type; 
             blog.content = content;
             await blog.save();
-            console.log('ren');
             res.json(blog);
 
     }else{
-        res.status(404).json({msg: 'You dont have a permission to edit this post'})
+        res.status(401).json({msg: 'You dont have a permission to edit this blog'})
     }
 
     }catch(err){
@@ -94,7 +96,27 @@ router.put('/:id', [auth,
 });
 
 //SECTION Delete blog 
-router.delete('/', auth, (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
+    try{
+        const blog = await Blog.findById(req.params.id);
+        if(!blog){
+            res.status(404).json({msg:'Blog not found'});
+        }
+        // NOTE Delete Permission
+        if(blog.user.toString() !== req.user.id){
+           res.status(401).json({msg: 'You dont have a permission to delete this blog'})
+        } 
+      
+
+       await blog.remove();
+       res.json({msg:'Blog is removed'});
+
+    }catch(err){
+        if(err.kind== 'ObjectId'){
+            return res.status(404).json({msg: 'Blog not found'});
+        }
+        res.status(500).send('Server delete blog Error');
+    }
 
 });
 
