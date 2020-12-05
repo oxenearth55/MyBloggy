@@ -16,13 +16,13 @@ const BlogSchema = new mongoose.Schema({
         required: true
     }, 
     user:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: ObjectId,
         ref:'user'
     },
     
     likes:[{
        user:{ 
-            type: ObjectId,
+            type:  ObjectId,
             ref:'user'
        }
     }],
@@ -35,9 +35,6 @@ const BlogSchema = new mongoose.Schema({
         text:{
             type: String,
             required: true
-        },
-        name:{
-            type: String, 
         },
         likes:[{
             user:{
