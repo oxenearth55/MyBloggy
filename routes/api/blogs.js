@@ -36,7 +36,7 @@ router.post('/', [auth,
 //SECTION Get all blogs
 router.get('/', async (req,res) => {
     try{
-        const blogs = await Blog.find().sort({date:-1}).populate('user','name');
+        const blogs = await Blog.find().sort({date:-1}).populate('user','name').populate('comments.user','name');
         res.json(blogs);
     }catch(err){
         res.status(500).send('Server get all blogs Error');
@@ -46,8 +46,8 @@ router.get('/', async (req,res) => {
 //SECTION Get a blog by id
 router.get('/:id', async (req, res) => {
     try{
-        const blog = await Blog.findById(req.params.id).populate('user','name');;
-        res.json(blog)
+        const blog = await Blog.findById(req.params.id).populate('user','name').populate('comments.user', 'name');
+        res.json(blog);
     }catch(err){
         if(err.kind == 'ObjectId'){ //NOTE if can not find blog id in database 
             return res.status(404).json({msg: 'Blog not found'});
@@ -121,7 +121,7 @@ router.delete('/:id', auth, async (req, res) => {
 
 });
 
-//SECTION like post 
+//SECTION like blog 
 router.put('/like/:id', auth, async (req,res ) => {
     try{
         const blog = await Blog.findById(req.params.id);
@@ -141,7 +141,7 @@ router.put('/like/:id', auth, async (req,res ) => {
 
 });
 
-//SECTION unlike post 
+//SECTION unlike blog 
 router.put('/unlike/:id', auth, async (req, res) => {
     try{
         const blog = await Blog.findById(req.params.id);
@@ -203,14 +203,26 @@ router.post('/comment/:blogId',[auth,
 router.delete('/comment/:blogId/:commentId', auth ,async (req, res) => {
     try{
         const blog = await Blog.findById(req.params.blogId);
-        const indexOfComment = blog.comments.map(comment => comment.user.toString()).indexOf(req.params.commentId)
-        console.log(indexOfComment);
-        console.log(blog.comments[indexOfComment].user.toString());
+
+        //NOTE index that the user want to delete 
+        const indexOfComment = blog.comments.map(comment => comment._id.toString()).indexOf(req.params.commentId);
+        if(indexOfComment == -1){
+            return res.status(400).json({msg:'Comment does not exist'})
+        }
+        //NOTE test type
+        console.log(indexOfComment) // print index
+        // console.log(blog.comments[1].user); // print object of user
+        // console.log(blog.comments[0].user._id.toString()); //print id of user as string
+
+        //NOTE Check the user have the same id as the comment ? 
         if(blog.comments[indexOfComment].user.toString() !== req.user.id ){
             res.status(401).json({ msg: 'Unauthorized to delete the comment'});
         }
 
-        // res.json(blog);
+        blog.comments.splice(indexOfComment,1); 
+        blog.save(); 
+
+        res.json(blog.comments);
 
     }catch(err){
         console.error(err.message);
@@ -218,6 +230,59 @@ router.delete('/comment/:blogId/:commentId', auth ,async (req, res) => {
     }
 
 });
+
+//SECTION Like comment 
+router.put('/comment/like/:blogId/:commentId', auth, async (req,res) => {
+    try{
+        const blog = await Blog.findById(req.params.blogId);
+        //NOTE find comment that a user going to like by id  
+        const comment = blog.comments.find(comment => comment._id.toString() === req.params.commentId);
+
+        if(!comment){
+            res.status(400).json({msg:'Comment does not exist'});
+        }
+
+        if(comment.likes.filter(like => like.user.toString() === req.user.id).length > 0) {
+           return res.status(400).json({msg:'You already liked this blog '});          
+        }
+
+        comment.likes.unshift({user: req.user.id});
+        blog.save();
+        json(blog.comments);
+
+
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Server like comment Error');
+    }
+
+});
+
+//SECTION Unlike comment
+router.put('/comment/unlike/:blogId/:commentId', auth, async (req,res) => {
+    try{
+        //NOTE Access blog in Database 
+        const blog = await Blog.findById(req.params.blogId); 
+        //NOTE Get comment that a user select
+        const comment = blog.comments.find(comment => comment._id.toString() === req.params.commentId);
+        if(!comment){
+            return res.status(400).json({msg:'Comment does not exist'});
+        }
+        if(comment.likes.filter(like => like.user.toString() === req.user.id).length <= 0 ){
+            return res.status(400).json({mag:'You have not liked this blog'});
+        }
+
+        const indexOfUnlike = comment.likes.map(like => like.user.toString()).indexOf(req.user.id);
+        comment.likes.splice(indexOfUnlike, 1); 
+        blog.save();
+        res.json(blog.comments);
+
+
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send('Sever unlike comment Error');
+    }
+})
 
 
 module.exports = router;
