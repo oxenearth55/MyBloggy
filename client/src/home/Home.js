@@ -7,6 +7,7 @@ import Section3 from './Section3';
 import Sidebar from './SideBar';
 
 
+
 const Home = () => {
     return (
      <Fragment>
@@ -37,4 +38,6 @@ const Home = () => {
     )
 }
 
-export default Home;
+
+
+export default  Home;

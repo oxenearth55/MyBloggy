@@ -27,6 +27,10 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
+h2,p{
+    font-family: Champagne;
+}
+
 
 /* ANCHOR MENU and FOOTER */
 /* SECTION  Menu bar*/
@@ -135,7 +139,7 @@
     height: 75%;
 
 }
-.sec-2 .card h3{
+.sec-2 .main-blog .card h3{
     font-size:32px;
 }
 .sec-2 .card p{
@@ -143,22 +147,68 @@
     font-size:18px;
 }
 /* SECTION 3 */
-.sec-3 img{
+.sec-3 .main-blog img{
     width: 100%; 
     height: 484px;
 }
+
+.sec-3 button{
+    border:none;
+    background: none;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.sec-3 .main-blog .date p{
+    font-size:14px;
+}
+
+.sec-3 .sub-blog .date p{
+    font-size:14px;
+}
+.sec-3 p{
+    font-size: 18px;
+    color: rgba(0, 0, 0, 0.623);
+    font-weight: 600;
+
+}
+
+.sec-3 .sub-blog{
+    /* margin-top: 10px; */
+}
+
+.sec-3 .sub-blog h3{
+    font-size: 24px;
+}
+
+.sec-3 .sub-blog img{
+    width: 100%; 
+    height: 278px;
+    
+}
+
+
+
+
+
+/* SECTION 4 */
+
+
+/* SECTION Sidebar */
+
 .sidebar{
-    border: solid 2px black;
+    /* border: solid 2px black; */
 }
 
 .sidebar h3{
+    display: inline-block;
     font-size: 28px;
     text-transform: uppercase;
     border-bottom: solid 2px rgba(0, 0, 0, 0.137);
 
 }
 
-.sidebar .line{
+.sidebar .header .line{
     border-bottom: solid 2px black;
     width:20%;
     position: absolute;
@@ -173,4 +223,77 @@
     color: rgba(0, 0, 0, 0.473);
     font-weight: 600;
 }
-/* SECTION 4 */
+
+.sidebar .social{
+    margin-top: 80px;
+}
+.sidebar .social-icon .facebook a{
+    color: rgb(5, 5, 212);
+}
+.sidebar .social-icon .linkedin a{
+    color: rgb(25, 133, 255);
+}
+.sidebar .social-icon .instagram {
+    color: transparent;
+    background: -webkit-radial-gradient(30% 107%, circle, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    background: -o-radial-gradient(30% 107%, circle, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    background: -webkit-radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    background-clip: text;
+    -webkit-background-clip: text;
+
+
+  
+}
+
+.sidebar .social-icon .instagram a{
+    color: transparent;
+
+
+}
+
+.sidebar .social-icon .line a{
+    color:rgb(4, 160, 4);
+}
+
+.sidebar .popular-blog{
+    margin-top: 110px;
+}
+
+.sidebar .popular-blog img{
+    width: 100%; 
+    padding-top: 0;
+}
+
+.sidebar .popular-blog .date p{
+    font-size: 12px;
+}
+
+.sidebar .popular-blog h2{
+    font-size: 18px;
+}
+
+.sidebar .popular-blog .lineend{
+    border-bottom: solid 1px rgba(0, 0, 0, 0.199);
+    width:100%;
+    /* position: absolute; */
+}
+
+/* SECTION Log in and register */
+.auth-image img{
+    width:100%;
+    height: 75vh;
+}
+
+.auth-field p{
+    font-size:16px;
+    color: rgba(0, 0, 0, 0.527);
+    padding-bottom: 0;
+    margin-bottom: 10px;
+}
+
+.auth-btn button{
+    display: block;
+    width: 100%;
+  
+}
