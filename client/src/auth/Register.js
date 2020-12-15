@@ -1,28 +1,30 @@
-import React, {useState} from 'react';
-import axios from 'axios';
-// SECTION Photo 
-import registerPhoto from '../photo/auth/register.jpg'
+import React, { useState } from 'react';
+//ANCHOR Redux
+import { register } from '../actions/auth';
+import { connect } from 'react-redux';
+
+// ANCHOR Photo 
+import registerPhoto from '../photo/auth/register.jpg';
 
 
-const Register = () => {
-    const [info, setInfo] = useState({
+const Register = ({ register }) => {
+    const [formData, setFormData] = useState({
         firstName:'',
         lastName:'',
         email:'',
         password:''
     })
+    //NOTE Destructuring
+    const {firstName, lastName, email, password} = formData;
 
     const handleChange = name => e => {
-        setInfo({...info, [name]: e.target.value });
+        setFormData({...formData, [name]: e.target.value });
+    
     }
 
-    function submitRegister(){
-        try{
-
-        }catch(err){
-
-        }
-
+    const submitRegister = e =>{
+        e.preventDefault();
+        register({ formData });
     }
 
     return (
@@ -37,28 +39,29 @@ const Register = () => {
              
             {/* SECTION Login Form */}
             <div className="col-6 mt-5">
+                <form className="form" onSubmit={e => submitRegister(e)}> 
                 <h2 className="text-center">To be a part of MyBloggy</h2>
                
                {/* SECTION Input Fields */}
                 <div className="row auth-field mt-5 mb-3">
                     <div className="col-6 mb-3">
                         <p>First Name</p>
-                        <input onChange={handleChange('firstName')} type="text" className="form-control" placeholder="First name" aria-label="First name"/>
+                        <input onChange={handleChange('firstName')} value={firstName} type="text" className="form-control" placeholder="First name" aria-label="First name"/>
                     </div>
 
                     <div className="col-6 mb-3">
                         <p>Last Name</p>
-                        <input onChange={handleChange('lastName')} type="text" className="form-control" placeholder="Last name" aria-label="Last name"/>
+                        <input onChange={handleChange('lastName')} value={lastName} type="text" className="form-control" placeholder="Last name" aria-label="Last name"/>
                     </div>
 
                     <div className="col-6 mb-3">
                         <p>Email</p>
-                        <input onChange={handleChange('email')} type="email" className="form-control" id="inputEmail4" placeholder="Email"/>
+                        <input onChange={handleChange('email')} value={email} name={email} type="email" className="form-control" id="inputEmail4" placeholder="Email"/>
                     </div>
                 
                     <div className="col-6 mb-3">
                         <p>Password</p>
-                        <input onChange={handleChange('password')} type="text" className="form-control" placeholder="password"/>
+                        <input onChange={handleChange('password')} value={password} type="text" className="form-control" placeholder="password"/>
                     </div>
 
                    
@@ -66,12 +69,13 @@ const Register = () => {
                 </div>
 
                 <div className="auth-btn">
-                        <button type="button" className="btn btn-primary ">SignUp</button>
+                        <button type="submit"  className="btn btn-primary ">SignUp</button>
 
-                    </div>
+                </div>
                        
               
-            </div>     
+            </form>  
+            </div>   
     </div>
    
     </div>
@@ -79,4 +83,4 @@ const Register = () => {
     )
 }
 
-export default Register;
+export default connect(null, { register })(Register);

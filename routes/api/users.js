@@ -9,9 +9,12 @@ const bcrypt = require('bcryptjs');
 //ANCHOR Public
 router.post('/',[ //NOTE middleware
     //NOTE paremeter meaning = ('property name', 'message')
-    check('name', 'Name is required')
+    check('firstName', 'First name is required')
     .not()
     .isEmpty(), 
+    check('lastName', 'Last name is required')
+    .not()
+    .isEmpty(),
     check('email', 'Please include a valid email').isEmail(),
     check('password', 'Please enter a password with 6 or more characters').isLength({
         min:6
@@ -25,7 +28,7 @@ router.post('/',[ //NOTE middleware
     }
     console.log(req.body); //NOTE see what we are goning to post to the api so to use this, we have to have init middleware (bodyparser) in server.js
 
-    const {name, email, password} = req.body;
+    const {firstName, lastName, email, password} = req.body;
 
     try{
     //ANCHOR See if user exists 
@@ -37,7 +40,8 @@ router.post('/',[ //NOTE middleware
     
     //NOTE user maintain these properties before saving in the database
     user = new User({
-        name,
+        firstName,
+        lastName,
         email,
         password
     });

@@ -49,7 +49,7 @@ const Section3 = ({getBlogs, blog: {blogs, loading}  }) => {
     )
 }
 
-const mapStateToProps = state =>({
+const mapStateToProps = state => ({
     blog: state.blog
 })
 

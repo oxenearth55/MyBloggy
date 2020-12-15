@@ -14,6 +14,7 @@ import Login from './auth/Login';
 import Register from './auth/Register';
 //ANCHOR Sub Components 
 import Menu from './menu_footer/Menu';
+import Alert from './components/Alert';
 
 import './App.css';
 
@@ -34,6 +35,7 @@ const App = () => {
       <Router>
         <Fragment>
           <Menu/>
+          <Alert/>
           <div className="container-fluid mx-0 px-0">
             <Switch>
               <Route exact path='/' component={Home}/>
