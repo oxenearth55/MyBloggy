@@ -3,7 +3,7 @@ import login from '../photo/auth/login.jpg';
 const Header = ({image}) => {
     return (
         
-        <div className="auth-image">
+        <div className="header-image">
             <img src={image} alt=""/>           
         </div>
 

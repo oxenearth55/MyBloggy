@@ -61,7 +61,7 @@ const Register = ({ register }) => {
                 
                     <div className="col-6 mb-3">
                         <p>Password</p>
-                        <input onChange={handleChange('password')} value={password} type="text" className="form-control" placeholder="password"/>
+                        <input onChange={handleChange('password')} value={password} type="password" className="form-control" placeholder="password"/>
                     </div>
 
                    

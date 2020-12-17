@@ -22,8 +22,6 @@ router.get('/', auth, async (req, res) => {
 
 //SECTION Register 
 router.post('/',[
-    check('firstName','Please include a valid email').not().isEmpty(), 
-    check('lastName','Please include a valid email').not().isEmpty(), 
     check('email','Please include a valid email').isEmail(), 
     check('password', 'Password is required').exists()
 ], async (req, res) => {

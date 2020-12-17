@@ -1,8 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import { login } from '../actions/auth';
 // SECTION Photo 
 import loginPhoto from '../photo/auth/login.jpg'
 
-const Login = () => {
+const Login = ({ auth : {isAuthenticated}, login}) => {
+
+    const [formData, setFormData] = useState({
+        email: '',
+        password: ''
+    })
+
+    const {email, password} = formData;
+
+    const handleChange = name => e => {
+        setFormData({...formData, [name] : e.target.value});
+    }
+
+    const submitLogin = e => {
+        e.preventDefault();
+        login({formData});
+    }
+
+    if(isAuthenticated){
+       return <Redirect to ='/dashboard'/>
+
+    }
+
     return (
         
         
@@ -17,31 +42,32 @@ const Login = () => {
                
                 {/* SECTION Login Form */}
                 <div className="col-6 mt-5">
-                    <h2 className="text-center">Welcome and Let begin</h2>
-                   
-                   {/* SECTION Input Fields */}
-                    <div className="row auth-field mt-5 mb-3">
-                      
 
-                        <div className="col-12 mb-3">
-                            <p>Email</p>
-                            <input type="email" className="form-control" id="inputEmail4" placeholder="Email"/>
-                        </div>
+                    <form onSubmit ={(e) => submitLogin(e) } className="form" >
+                        <h2 className="text-center">Welcome and Let begin</h2>
                     
-                        <div className="col-12 mb-3">
-                            <p>Password</p>
-                            <input type="text" className="form-control" placeholder="password"/>
+                    {/* SECTION Input Fields */}
+                        <div className="row auth-field mt-5 mb-3">
+                        
+                            <div className="col-12 mb-3">
+                                <p>Email</p>
+                                <input type="email" onChange={handleChange('email')} className="form-control" id="inputEmail4" placeholder="Email"/>
+                            </div>
+                        
+                            <div className="col-12 mb-3">
+                                <p>Password</p>
+                                <input type="password" onChange={handleChange('password')} className="form-control" placeholder="password"/>
+                            </div>                 
+                        
                         </div>
 
-                       
-                      
-                    </div>
-
-                    <div className="auth-btn">
-                            <button type="button" className="btn btn-primary ">Login</button>
+                        <div className="auth-btn">
+                                <button type="submit" className="btn btn-primary ">Login</button>
 
                         </div>
                            
+                    </form>
+                  
                   
                 </div>     
         </div>
@@ -52,4 +78,8 @@ const Login = () => {
     )
 }
 
-export default Login;
+const mapStateToProps = state => ({
+    auth: state.auth
+})
+
+export default connect(mapStateToProps, { login }) (Login);
