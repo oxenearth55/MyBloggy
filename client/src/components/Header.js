@@ -1,10 +1,11 @@
 import React from 'react';
 import login from '../photo/auth/login.jpg';
-const Header = ({image}) => {
+const Header = ({section, text}) => {
     return (
-        
-        <div className="header-image">
-            <img src={image} alt=""/>           
+        <div className="header-img">
+            <div className= {`header-image-${section} d-flex justify-content-center align-items-center`}>
+                <h1 className='px-5 py-3'>{text}</h1>
+            </div>
         </div>
 
     )

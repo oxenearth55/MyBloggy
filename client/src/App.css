@@ -308,3 +308,24 @@ h2,p{
 .layout{
     display: relative;
 }
+
+
+/* SECTION Header page */
+.header-image-dashboard{
+    background-image: url(photo/header/dashboard.jpg);
+    width: 100%; 
+    height: 280px; 
+    background-size: cover;
+    background-position: center;
+    /* filter: brightness(60%); */
+    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.562)), to(rgba(0, 0, 0, 0.514))),url(photo/header/dashboard.jpg);
+}
+
+.header-img h1{
+    font-family: Champagne;  
+    background-color: rgba(255, 255, 255, 0.534);
+    
+  
+    
+
+}

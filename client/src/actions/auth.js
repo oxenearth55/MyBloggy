@@ -8,7 +8,8 @@ import { REGISTER_SUCCESS,
     LOGIN_SUCCESS,
     LOGIN_FAIL,
     LOADUSER,
-    LOADUSER_FAIL
+    LOADUSER_FAIL,
+    LOGOUT
 
 } from './types';
 import setAuthToken from '../utils/setAuthToken';
@@ -104,4 +105,12 @@ export const login = ({ formData }) => async dispatch => {
      }
     
 
+}
+
+//SECTION Log out 
+
+export const logout = () => dispatch => {
+    dispatch({
+        type:LOGOUT
+    })
 }

@@ -1,18 +1,28 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import {Link} from 'react-router-dom';
+import { connect } from 'react-redux';
+import {logout} from '../actions/auth';
 
-const Menu = props => {
+const Menu = ({auth:{isAuthenticated}, logout}) => {
    
     return (
         <div className="nav-menu">
             <div className="d-flex justify-content-end menu-login ">
-            <Link to = '/register' className=" font-champagne mx-4">
+             { !isAuthenticated ? (
+                 <Fragment>
+                    <Link to = '/register' className=" font-champagne mx-4">
                     Signup
-                </Link>
-
-                <Link to = '/login' className=" font-champagne mx-4">
-                    Signin
-                </Link>
+                    </Link>
+                    <Link to = '/login' className=" font-champagne mx-4">
+                        Signin
+                    </Link>
+                 </Fragment>
+            ) : (
+                <Link onClick={() => logout()}  className=" font-champagne mx-4">
+                    Logout
+                </Link>)
+                }   
+          
             
 
             </div>
@@ -24,7 +34,7 @@ const Menu = props => {
                     Home
                 </Link>
 
-                <Link to ='/' className=" font-champagne">
+                <Link to ='/dashboard' className=" font-champagne">
                     Dashboard
                 </Link>
 
@@ -40,5 +50,9 @@ const Menu = props => {
     )
 }
 
+const mapStateToProps = state => ({
+    auth : state.auth
+})
 
-export default Menu;
+
+export default connect(mapStateToProps, { logout })(Menu);
