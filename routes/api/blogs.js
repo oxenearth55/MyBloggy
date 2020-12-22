@@ -36,7 +36,7 @@ router.post('/', [auth,
 //SECTION Get all blogs
 router.get('/', async (req,res) => {
     try{
-        const blogs = await Blog.find().sort({date:-1}).populate('user','name').populate('comments.user','name');
+        const blogs = await Blog.find().sort({date:-1}).populate('user','firstName').populate('comments.user','firstName');
         res.json(blogs);
     }catch(err){
         res.status(500).send('Server get all blogs Error');

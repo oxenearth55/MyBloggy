@@ -38,7 +38,7 @@ const Menu = ({auth:{isAuthenticated}, logout}) => {
                     Dashboard
                 </Link>
 
-                <Link to ='/' className=" font-champagne">
+                <Link to ='/blogs' className=" font-champagne">
                     Blogs
                 </Link>
 
