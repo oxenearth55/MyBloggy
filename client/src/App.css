@@ -331,6 +331,37 @@ h2,p{
     background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.562)), to(rgba(0, 0, 0, 0.514))),url(photo/header/blogs.jpg);
 }
 
+.header-image-Travel{
+    background-image: url(photo/header/travel.jpg);
+    width: 100%; 
+    height: 280px; 
+    background-size: cover;
+    background-position: center;
+    /* filter: brightness(60%); */
+    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.562)), to(rgba(0, 0, 0, 0.514))),url(photo/header/travel.jpg);
+}
+
+.header-image-Technology{
+    background-image: url(photo/header/technology.jpg);
+    width: 100%; 
+    height: 280px; 
+    background-size: cover;
+    background-position: center;
+    /* filter: brightness(60%); */
+    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.562)), to(rgba(0, 0, 0, 0.514))),url(photo/header/technology.jpg);
+}
+
+
+.header-image-Food{
+    background-image: url(photo/header/food.jpg);
+    width: 100%; 
+    height: 280px; 
+    background-size: cover;
+    background-position: center;
+    /* filter: brightness(60%); */
+    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.562)), to(rgba(0, 0, 0, 0.514))),url(photo/header/food.jpg);
+}
+
 
 
 
@@ -340,6 +371,4 @@ h2,p{
     
 }
 
-
-/* SECTION Table */
 

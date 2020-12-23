@@ -1,5 +1,6 @@
 import {
     GET_BLOGS,
+    GET_BLOG,
     BLOG_ERROR,
     CLEAR_BLOG
 } from '../actions/types';
@@ -21,6 +22,19 @@ export default function(state = initialState, action){
                 blogs: payload,
                 loading: false
             };
+        case GET_BLOG: 
+            return {
+                ...state,
+                blog: payload,
+                loading: false
+            }
+        case CLEAR_BLOG: 
+            return{
+                ...state,
+                blog: null,
+                loading: false
+            }
+
         case BLOG_ERROR: 
             return{
                 ...state,

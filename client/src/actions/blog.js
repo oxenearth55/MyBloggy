@@ -1,7 +1,8 @@
 import axios from 'axios'; 
 import {
     GET_BLOGS,
-    BLOG_ERROR
+    BLOG_ERROR,
+    GET_BLOG
 } from './types';
 
 export const getBlogs = () => async dispatch => {
@@ -20,4 +21,21 @@ export const getBlogs = () => async dispatch => {
 
     }
 
+}
+
+export const getBlog = (id) => async dispatch => {
+    try{
+        const res = await axios.get(`/api/blogs/${id}`); 
+        dispatch({
+            type: GET_BLOG,
+            payload: res.data
+        })
+
+    }catch(err){
+        dispatch({
+            type: BLOG_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status }            
+        })
+
+    }
 }

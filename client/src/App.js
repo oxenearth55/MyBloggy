@@ -15,6 +15,7 @@ import Login from './auth/Login';
 import Register from './auth/Register';
 import Dashboard from './dashboard/Dashboard';
 import Blogs from './blog/Blogs';
+import Blog from './blog/Blog';
 //ANCOHR Route 
 import PrivateRoute from './PrivateRoute';
 
@@ -48,6 +49,7 @@ const App = () => {
               <Route exact path='/login' component={Login}/>
               <Route exact path="/Register" component={Register}/>
               <Route exact path='/blogs' component={Blogs}/>
+              <Route exact path='/blog/:id' component={Blog}/>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
               
             </Switch>        

@@ -2,116 +2,103 @@ import React, {useEffect, useState} from 'react';
 import Header from '../components/Header';
 import { connect } from 'react-redux';
 import { getBlogs } from '../actions/blog';
+import { Link, Redirect } from 'react-router-dom';
 //NOTE use api from React Table
 import { useTable, useSortBy } from 'react-table'
 import Spinner from '../components/Spinner';
 import Moment from 'react-moment';
+import { MDBDataTable } from 'mdbreact';
+import blog from '../reducers/blog';
+
 
 
 const Blogs = ({blog: {blogs, loading}, getBlogs}) => {
 
     useEffect(() => {
         getBlogs();
+        
     },[getBlogs])
+  
 
+    //SECTION Table 
 
-    //NOTE Define column 
-    const columns = React.useMemo(
-        () => [
-            {
-                Header: 'Topic',
-                accessor: 'topic'
-            },
-            {
-                Header: 'Type',
-                accessor: 'type'
-            },
-           
-            {
-                Header: 'Name',
-                accessor: 'user.firstName'
-            },
-           
-        ],
-        []
+    //NOTE Access Button
+    const seeBlog = (id) => (
+      <Link  className="btn btn-warning btn-sm mx-3 text-white" to ={`/blog/${id}`}>
+        Click
+      </Link>
 
     )
 
-    //NOTE grab data from reducer
-const data = blogs;
 
-const Table = ({ columns, data }) => { 
+    var rows = []; 
 
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
-      } = useTable(
-        {
-          columns,
-          data,
+    blogs.map(blog => {
+      rows.push({topic:blog.topic,date: <Moment startOf={'hour'} fromNow>{blog.date}</Moment>,firstName:blog.user.firstName,type:blog.type,click:seeBlog(blog._id)
+      })})
+      console.log('row is' +rows.map(row=>row))
+
+    
+    
+
+    const dataColum ={columns:[
+          {
+              label: 'Topic',
+              field: 'topic',
+              sort: 'asc',
+              width: 150
+
+          },
+          {
+            label: 'type',
+            field: 'type',
+            sort: 'asc',
+            width: 150
+
         },
-        useSortBy
-      )
+        {
+          label: 'date',
+            field: 'date',
+            sort: 'asc',
+            width: 150
+        },
+          
+        {
+          label: 'name',
+          field: 'firstName',
+          sort: 'asc',
+          width: 150
 
-    return(
-<>
-<table className='table table-hover' {...getTableProps()}>
-  <thead>
-    {headerGroups.map(headerGroup => (
-      <tr {...headerGroup.getHeaderGroupProps()}>
-        {headerGroup.headers.map(column => (
-          // Add the sorting props to control sorting. For this example
-          // we can add them into the header props
-          <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-            {column.render('Header')}
-            {/* Add a sort direction indicator */}
-            <span>
-              {column.isSorted
-                ? column.isSortedDesc
-                  ? ' 🔽'
-                  : ' 🔼'
-                : ''}
-            </span>
-          </th>
-        ))}
-      </tr>
-    ))}
-  </thead>
-  <tbody {...getTableBodyProps()}>
-        {rows.map((row, i) => {
-          prepareRow(row)
-          return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map(cell => {
-                return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-              })}
-            </tr>
-          )
-        })}
-      </tbody>
-</table>
-<br />
-<div>Showing the first 20 results of {rows.length} rows</div>
-</>
+      },
+      {
+        label: 'Read Blog',
+          field: 'click',
+          sort: 'asc',
+          width: 150
+        
+      }
+  
+  ]}
 
-    )}
-    return (
-        <div>
-            <Header section='blogs' text='Blogs'/>
-            {blogs !== null && !loading ?  <Table columns={columns} data={data} /> 
-            : <Spinner/> }
+  dataColum.rows =rows
 
-            Test
-            {blogs.map(blog => blog.user.firstName)}
-           
 
-            
-        </div>
-    )
-}
+  return(
+    <div>
+      <Header section='blogs' text='Blogs'/>
+      {blogs !== null && !loading ?     <MDBDataTable striped bordered small order={['age', 'asc' ]} data={dataColum} /> 
+      : <Spinner/>}
+     
+    </div>
+  )
+
+  
+
+
+    }
+    
+    
+
 
 const mapStateToProps = state => ({
     blog: state.blog
