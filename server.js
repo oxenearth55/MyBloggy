@@ -10,6 +10,9 @@ connectDB();
 //SECTION middle ware
 app.use(express.json({extended: false})); //NOTE Allow us to read the request.body
 
+//NOTE For accepting the image file size 
+app.use(express.json({ limit: '50mb'})); 
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // SECTION Routes 
  app.use('/api/users', require('./routes/api/users'));

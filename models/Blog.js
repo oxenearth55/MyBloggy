@@ -27,6 +27,39 @@ const BlogSchema = new mongoose.Schema({
        }
     }],
 
+    section:[{
+        pic1:{
+            type: String
+        },
+        pic2: {
+            type: String
+        },
+        pic3: {
+            type: String
+        }, 
+        text1: {
+            type: String
+        },
+        text2: {
+            type: String
+        },
+        text3: {
+            type: String
+        },
+        header:{
+            type:String
+        },
+        sub_header1:{
+           type: String
+        },
+        sub_header2:{
+            type: String
+         },
+         sub_header3:{
+            type: String
+         }
+    }],
+
     comments:[{
         user:{
             type: ObjectId,

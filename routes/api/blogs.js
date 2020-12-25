@@ -5,6 +5,8 @@ const User = require('../../models/User');
 const auth = require('../../middleware/auth'); 
 const {check, validationResult} = require('express-validator');
 const { json } = require('body-parser');
+const imgbbUploader = require('imgbb-uploader');
+const {cloudinary} = require('../../utils/cloudinary');
 
 //ANCHOR blog
 //SECTION Create blog 
@@ -18,14 +20,20 @@ router.post('/', [auth,
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()});
     }
-    const { topic, type, content } = req.body;
+    const { topic, type, content, section } = req.body;
     try{
         const newBlog = new Blog({
             topic: topic,
             type: type,
             content: content,
+            section: section,
             user: req.user.id
         })
+        //NOTE Upload image to imgbb
+        imgbbUploader("0a2fa7317578f0933d219e6afa5afc30", "/Users/macintoshhd/Desktop/Picture.jpg")
+        .then(response => console.log(response))
+        .catch(error => console.error(1))
+
         const PostBlog = await newBlog.save();
         res.json(PostBlog);
     }catch(err){
@@ -285,4 +293,33 @@ router.put('/comment/unlike/:blogId/:commentId', auth, async (req,res) => {
 })
 
 
+//NOTE Upload image to cloudinary 
+router.post('/upload', async (req ,res) => {
+    try {
+        const fileStr = req.body.data; 
+        const uploadedResponse = await cloudinary.uploader.
+        upload(fileStr, {
+            upload_preset: 'ml_default'
+        })
+        console.log(uploadedResponse);
+        res.json({msg: 'YAAAAA'});
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Server Upload Error');
+        
+    }    
+});
+router.get('/image', async (req,res) => {
+    const { resources }  = await cloudinary.search
+    .expression('public_id: nhotmpbfozf1njml4s8n')
+    // .sort_by('public_id', 'desc')
+    // .max_results(10)
+    .execute()
+
+    console.log('result is' + resources);
+    res.send(resources)
+})
+
+//NOTE Get Image from cloudinary
 module.exports = router;
