@@ -11,6 +11,22 @@ const Dashboard = ({auth: { user, loading }}) => {
     const [fileInputState, setFileInputState] = useState('');
     const [imageId, setImageId] = useState();
     const [previewSource, setPreviewSource] = useState();
+    const [previewSource2, setPreviewSource2] = useState();
+
+    const image = [];
+    const [file1, setFile1] = useState();
+    const [file2, setFile2] = useState();
+
+
+    const [image, setImage] = useState(
+        
+    );
+    const [formData, setFormData] = useState({
+        file1:null,
+        file2:null
+    })
+
+    // const image = []
     
     useEffect( () => {
         loadImage();
@@ -29,32 +45,71 @@ const Dashboard = ({auth: { user, loading }}) => {
 
     const handleChange = name => e =>{
         const file =e.target.files[0];
-        previewFile(file);
+        // setFormData({...formData, [name]: file})
+        if(name === 'file1'){
+            previewFile(file, name);
+            setFile1(file);
+        }
+        else if(name === 'file2'){
+            previewFile(file, name)
+            setFile2(file);
+
+        }
         // setTest(e.target.files[0]);
+        // setImage(file)
         }
 
-    const previewFile = (file) => {
+    const previewFile = (file, name) => {
         const reader = new FileReader(); //NOTE Read the content of a file stored on the user's computer
         reader.readAsDataURL(file) //NOTE Convert img to String URL
         reader.onloadend = () =>{
-            setPreviewSource(reader.result) //NOTE get raw string as base 64 encoded image
+            if(name === 'file1'){
+                setPreviewSource(reader.result) //NOTE get raw string as base 64 encoded image
+            } else if(name === 'file2'){
+                setPreviewSource2(reader.result)
+            }
+            // setImage(reader.result)
+            // image.push(reader.result);
+console.log('array is' + image[0])
         }
 
     }
 
     const handleSubbmitFile = (e) => {
         e.preventDefault(); //NOTE prevent from reload the page 
-        if(!previewSource) return; 
-        uploadImage(previewSource);
+
+        if(file1){
+            image.push(file1)
+        }if(file2){
+            image.push(file2);
+        }
+        console.log('Array of file is '+ image);
+        if(!previewSource || !previewSource2) return; 
+        uploadImage(image);
+        
     }
 
     const uploadImage = async (base64EncodedImage) => {
         try {
-            await fetch('/api/blogs/upload', {
-                method: 'POST',
-                body: JSON.stringify({data: base64EncodedImage}), 
-                headers: {'Content-Type' : 'application/json'}
-            })
+
+            const config = {
+                headers:{
+                    'Content-Type' :  'application/json'
+                }
+            }
+            const body = JSON.stringify({image: image});
+
+            
+
+            await axios.post('/api/blogs/multer', body, config);
+
+            // await fetch('/api/blogs/multer', {
+            //     method: 'POST',
+            //     body: JSON.stringify({data: image}), 
+            //     headers: {'Content-Type' : 'application/json'}
+            // })
+
+            
             
         } catch (error) {
             console.log(error);
@@ -108,12 +163,22 @@ const Dashboard = ({auth: { user, loading }}) => {
                     
                         <div class="form-group mt-4">
                             <label for="exampleFormControlFile1">Example file input</label>
-                            <input onChange={handleChange()} type="file" class="form-control-file" id="exampleFormControlFile1"  accept="image/*"/>
+                            <input onChange={handleChange('file1')} type="file" class="form-control-file" id="exampleFormControlFile1"  accept="image/*" multiple/>
+
+                            <label for="exampleFormControlFile1">Example file input</label>
+                            <input onChange={handleChange('file2')} type="file" class="form-control-file" id="exampleFormControlFile1"  accept="image/*"/>
+
                         </div>
 
                         {previewSource && (
                             <img src={previewSource} alt ="Chosen" style={{height: '300px'}}/>
                         )}
+
+                        {previewSource2 && (
+                            <img src={previewSource2} alt ="Chosen" style={{height: '300px'}}/>
+                        )}
+
+
                         <button className='btn btn-danger' type='submit'>Submit</button>
                        
                     </div>

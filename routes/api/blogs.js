@@ -3,10 +3,12 @@ const router = express.Router();
 const Blog = require('../../models/Blog'); 
 const User = require('../../models/User');
 const auth = require('../../middleware/auth'); 
+const upload = require('../../middleware/multer');
 const {check, validationResult} = require('express-validator');
 const { json } = require('body-parser');
 const imgbbUploader = require('imgbb-uploader');
 const {cloudinary} = require('../../utils/cloudinary');
+const fs = require('fs');
 
 //ANCHOR blog
 //SECTION Create blog 
@@ -320,6 +322,58 @@ router.get('/image', async (req,res) => {
     console.log('result is' + resources);
     res.send(resources)
 })
+
+
+router.post('/multer',auth ,upload.array('image'), async (req, res) => { //NOTE image is the field name
+
+    try {
+        const urls = []
+        const files = req.files; //This is an array of image files
+        console.log('Upload cloudinary running '+ files)
+        // const uploader = async (path) => await uploads(path, 'Image');
+
+        // const newPath = await uploader(files.path)
+
+       
+        for (const file of files) {
+            // console.log('loop work '+ file);
+          const  {path}  = file;
+        //   const test = await uploader(path);
+
+
+
+       const uploaders = async (path) => await cloudinary.uploader.upload(path,(result) => {
+            return new Promise(resolve => {
+
+            resolve({ //NOTE return url and public_id after uploading 
+                // url: result.url,
+                // id: result.public_id
+            })
+        }, {
+            resource_type: "auto",
+            folder: 'Home/Images'
+        })
+    })
+
+       const newPath = await uploaders(path)
+
+          urls.push(newPath)
+          fs.unlinkSync(path) //NOTE synchronously remove a file or symbolic link from the filesystem
+        }
+        res.json(urls);
+
+        res.status(200).json({message: 'images uploaded successfully'})
+        
+    } catch (error) {
+        console.error(error.message);
+        res.status(405).json({
+            err: `${req.method} method not allowed`
+          })   
+    }
+ 
+
+});
+
 
 //NOTE Get Image from cloudinary
 module.exports = router;
