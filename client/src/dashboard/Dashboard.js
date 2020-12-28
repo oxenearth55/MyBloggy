@@ -8,25 +8,10 @@ import {Image} from 'cloudinary-react';
 
 const Dashboard = ({auth: { user, loading }}) => {
     const [addBlog, setAddBlog] = useState(false);
-    const [fileInputState, setFileInputState] = useState('');
     const [imageId, setImageId] = useState();
     const [previewSource, setPreviewSource] = useState();
-    const [previewSource2, setPreviewSource2] = useState();
+    const [files, setFiles] = useState([]);
 
-    const image = [];
-    const [file1, setFile1] = useState();
-    const [file2, setFile2] = useState();
-
-
-    const [image, setImage] = useState(
-        
-    );
-    const [formData, setFormData] = useState({
-        file1:null,
-        file2:null
-    })
-
-    // const image = []
     
     useEffect( () => {
         loadImage();
@@ -43,49 +28,42 @@ const Dashboard = ({auth: { user, loading }}) => {
        
     )
 
-    const handleChange = name => e =>{
-        const file =e.target.files[0];
-        // setFormData({...formData, [name]: file})
-        if(name === 'file1'){
-            previewFile(file, name);
-            setFile1(file);
-        }
-        else if(name === 'file2'){
-            previewFile(file, name)
-            setFile2(file);
+    const handleChange = e => {
+         // Create an instance of FileReader API
+    const file_reader = new FileReader();
+    const file = e.target.files[0];
+    file_reader.readAsDataURL(file);
+
+    // Get the actual file itself
+    // let file = e.target.files[0];
+    file_reader.onload = () => {
+      // After uploading the file
+      // appending the file to our state array
+      // set the object keys and values accordingly
+      setFiles([...files, { image: file_reader.result }]);
+
+    };
 
         }
-        // setTest(e.target.files[0]);
-        // setImage(file)
-        }
 
-    const previewFile = (file, name) => {
+    const previewFile = (file) => {
         const reader = new FileReader(); //NOTE Read the content of a file stored on the user's computer
         reader.readAsDataURL(file) //NOTE Convert img to String URL
         reader.onloadend = () =>{
-            if(name === 'file1'){
-                setPreviewSource(reader.result) //NOTE get raw string as base 64 encoded image
-            } else if(name === 'file2'){
-                setPreviewSource2(reader.result)
-            }
+            setPreviewSource(reader.result) //NOTE get raw string as base 64 encoded image
             // setImage(reader.result)
             // image.push(reader.result);
-console.log('array is' + image[0])
         }
 
     }
 
     const handleSubbmitFile = (e) => {
         e.preventDefault(); //NOTE prevent from reload the page 
+        console.log(files)
+        console.log('array is' + files.length)
 
-        if(file1){
-            image.push(file1)
-        }if(file2){
-            image.push(file2);
-        }
-        console.log('Array of file is '+ image);
-        if(!previewSource || !previewSource2) return; 
-        uploadImage(image);
+        if(!files) return; 
+        uploadImage(files);
         
     }
 
@@ -97,7 +75,7 @@ console.log('array is' + image[0])
                     'Content-Type' :  'application/json'
                 }
             }
-            const body = JSON.stringify({image: image});
+            const body = JSON.stringify({data: base64EncodedImage});
 
             
 
@@ -163,22 +141,15 @@ console.log('array is' + image[0])
                     
                         <div class="form-group mt-4">
                             <label for="exampleFormControlFile1">Example file input</label>
-                            <input onChange={handleChange('file1')} type="file" class="form-control-file" id="exampleFormControlFile1"  accept="image/*" multiple/>
+                            <input onChange={handleChange} type="file" class="form-control-file" id="exampleFormControlFile1"  accept="image/*"/>
 
                             <label for="exampleFormControlFile1">Example file input</label>
-                            <input onChange={handleChange('file2')} type="file" class="form-control-file" id="exampleFormControlFile1"  accept="image/*"/>
-
+                            <input onChange={handleChange} type="file" class="form-control-file" id="exampleFormControlFile1"  accept="image/*"/>
                         </div>
 
                         {previewSource && (
                             <img src={previewSource} alt ="Chosen" style={{height: '300px'}}/>
                         )}
-
-                        {previewSource2 && (
-                            <img src={previewSource2} alt ="Chosen" style={{height: '300px'}}/>
-                        )}
-
-
                         <button className='btn btn-danger' type='submit'>Submit</button>
                        
                     </div>
