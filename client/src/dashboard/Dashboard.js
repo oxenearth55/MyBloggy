@@ -11,6 +11,11 @@ const Dashboard = ({auth: { user, loading }}) => {
     const [imageId, setImageId] = useState();
     const [previewSource, setPreviewSource] = useState();
     const [files, setFiles] = useState([]);
+    
+    const [formInfo, setFormInfo] = useState({
+        topic: '',
+        type: ''
+    });
 
     
     useEffect( () => {
@@ -32,17 +37,16 @@ const Dashboard = ({auth: { user, loading }}) => {
          // Create an instance of FileReader API
     const file_reader = new FileReader();
     const file = e.target.files[0];
-    file_reader.readAsDataURL(file);
 
     // Get the actual file itself
-    // let file = e.target.files[0];
     file_reader.onload = () => {
       // After uploading the file
       // appending the file to our state array
       // set the object keys and values accordingly
-      setFiles([...files, { image: file_reader.result }]);
-
+      setFiles([...files,  file]);
     };
+    file_reader.readAsDataURL(file);
+
 
         }
 
@@ -59,36 +63,29 @@ const Dashboard = ({auth: { user, loading }}) => {
 
     const handleSubbmitFile = (e) => {
         e.preventDefault(); //NOTE prevent from reload the page 
-        console.log(files)
-        console.log('array is' + files.length)
+        let formData = new FormData(); 
+
+        for(var i = 0 ; i < files.length; i++){
+            formData.append('image',files[i])
+        }
+        
+        console.log('formData result: '+ formData.get('image'))
+        // console.log('array is' + formData.get('image').length)
 
         if(!files) return; 
-        uploadImage(files);
+        uploadImage(formData);
         
     }
 
-    const uploadImage = async (base64EncodedImage) => {
+    const uploadImage = async (formData) => {
         try {
-
             const config = {
                 headers:{
                     'Content-Type' :  'application/json'
                 }
             }
-            const body = JSON.stringify({data: base64EncodedImage});
-
-            
-
-            await axios.post('/api/blogs/multer', body, config);
-
-            // await fetch('/api/blogs/multer', {
-            //     method: 'POST',
-            //     body: JSON.stringify({data: image}), 
-            //     headers: {'Content-Type' : 'application/json'}
-            // })
-
-            
-            
+            // const body = JSON.stringify({data: formData});
+            await axios.post('/api/blogs/multer', formData, config);
         } catch (error) {
             console.log(error);
         }
@@ -141,10 +138,10 @@ const Dashboard = ({auth: { user, loading }}) => {
                     
                         <div class="form-group mt-4">
                             <label for="exampleFormControlFile1">Example file input</label>
-                            <input onChange={handleChange} type="file" class="form-control-file" id="exampleFormControlFile1"  accept="image/*"/>
+                            <input name="image" onChange={handleChange} type="file" class="form-control-file" id="exampleFormControlFile1"  accept="image/*"/>
 
                             <label for="exampleFormControlFile1">Example file input</label>
-                            <input onChange={handleChange} type="file" class="form-control-file" id="exampleFormControlFile1"  accept="image/*"/>
+                            <input name="image" onChange={handleChange} type="file" class="form-control-file" id="exampleFormControlFile1"  accept="image/*"/>
                         </div>
 
                         {previewSource && (

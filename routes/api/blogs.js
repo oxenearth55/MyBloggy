@@ -328,31 +328,20 @@ router.post('/multer',auth ,upload.array('image'), async (req, res) => { //NOTE 
 
     try {
         const urls = []
-        const files = req.files; //This is an array of image files
+        const files = req.files; 
         console.log('Upload cloudinary running '+ files)
-        // const uploader = async (path) => await uploads(path, 'Image');
+      
 
-        // const newPath = await uploader(files.path)
 
-       
+
+        
         for (const file of files) {
-            // console.log('loop work '+ file);
           const  {path}  = file;
-        //   const test = await uploader(path);
 
 
 
        const uploaders = async (path) => await cloudinary.uploader.upload(path,(result) => {
-            return new Promise(resolve => {
-
-            resolve({ //NOTE return url and public_id after uploading 
-                // url: result.url,
-                // id: result.public_id
-            })
-        }, {
-            resource_type: "auto",
-            folder: 'Home/Images'
-        })
+          
     })
 
        const newPath = await uploaders(path)
@@ -361,7 +350,6 @@ router.post('/multer',auth ,upload.array('image'), async (req, res) => { //NOTE 
           fs.unlinkSync(path) //NOTE synchronously remove a file or symbolic link from the filesystem
         }
         res.json(urls);
-
         res.status(200).json({message: 'images uploaded successfully'})
         
     } catch (error) {

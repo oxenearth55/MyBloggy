@@ -1,5 +1,8 @@
 export const GET_BLOGS = 'GET_BLOGS';
 export const GET_BLOG = 'GET_BLOG';
+export const CREATE_BLOG = 'CREATE_BLOG';
+export const CREATE_SUCCESS = 'CREATE_SUCCESS';
+export const CREATE_ERROR = 'CREATE_ERROR';
 export const CLEAR_BLOG = 'CLEAR_BLOG';
 export const BLOG_ERROR = 'BLOG_ERROR';
 export const LOGIN_SUCCESS = 'LOGIN';
