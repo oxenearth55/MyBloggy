@@ -6,7 +6,6 @@ const auth = require('../../middleware/auth');
 const upload = require('../../middleware/multer');
 const {check, validationResult} = require('express-validator');
 const { json } = require('body-parser');
-const imgbbUploader = require('imgbb-uploader');
 const {cloudinary} = require('../../utils/cloudinary');
 const fs = require('fs');
 
@@ -14,31 +13,31 @@ const fs = require('fs');
 //SECTION Create blog 
 router.post('/', [auth,
     check('topic', 'Topic is required').not().isEmpty(),
-    check('type', 'Type is required').not().isEmpty(),
-    check('content', 'Content is required').not().isEmpty()
+    check('type', 'Type is required').not().isEmpty()
+    // check('content', 'Content is required').not().isEmpty()
 
 ], async (req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()});
     }
-    const { topic, type, content, section } = req.body;
+    const { topic, type } = req.body;
+    console.log('topic is' + topic);
+    console.log('type is' + type);
+
     try{
         const newBlog = new Blog({
             topic: topic,
             type: type,
-            content: content,
-            section: section,
+            // content: content,
+            // section: section,
             user: req.user.id
         })
-        //NOTE Upload image to imgbb
-        imgbbUploader("0a2fa7317578f0933d219e6afa5afc30", "/Users/macintoshhd/Desktop/Picture.jpg")
-        .then(response => console.log(response))
-        .catch(error => console.error(1))
 
         const PostBlog = await newBlog.save();
         res.json(PostBlog);
     }catch(err){
+        console.log(err)
         return res.status(500).send('Server Create blog Error');
     }
 });
@@ -71,7 +70,7 @@ router.get('/:id', async (req, res) => {
 router.put('/:id', [auth,
     check('topic', 'Topic is required').not().isEmpty(),
     check('type', 'Type is required').not().isEmpty(),
-    check('content', 'Content is required').not().isEmpty()
+    // check('content', 'Content is required').not().isEmpty()
 ], async (req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()){

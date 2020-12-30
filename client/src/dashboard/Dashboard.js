@@ -5,17 +5,22 @@ import Spinner from '../components/Spinner';
 import AddBlog from './AddBlog';
 import axios from 'axios';
 import {Image} from 'cloudinary-react';
+import {createBlog } from '../actions/blog';
 
-const Dashboard = ({auth: { user, loading }}) => {
+const Dashboard = ({auth: { user, loading }, createBlog}) => {
     const [addBlog, setAddBlog] = useState(false);
     const [imageId, setImageId] = useState();
     const [previewSource, setPreviewSource] = useState();
     const [files, setFiles] = useState([]);
-    
+
+
     const [formInfo, setFormInfo] = useState({
         topic: '',
-        type: ''
+        type: '',
+        formData: new FormData()
     });
+
+    const {formData } = formInfo
 
     
     useEffect( () => {
@@ -33,19 +38,28 @@ const Dashboard = ({auth: { user, loading }}) => {
        
     )
 
-    const handleChange = e => {
-         // Create an instance of FileReader API
-    const file_reader = new FileReader();
-    const file = e.target.files[0];
+    const handleChange = name => e => {
 
-    // Get the actual file itself
-    file_reader.onload = () => {
-      // After uploading the file
-      // appending the file to our state array
-      // set the object keys and values accordingly
-      setFiles([...files,  file]);
-    };
-    file_reader.readAsDataURL(file);
+        const value = name == 'image'? e.target.files[0] : e.target.value;
+
+        if(name == 'image'){
+              //NOTE Create an instance of FileReader API
+            const file_reader = new FileReader();
+        
+            //NOTE Get the actual file itself
+            file_reader.onload = () => {
+              //NOTE After uploading the file
+              //NOTE appending the file to our state array
+              //NOTE set the object keys and values accordingly
+              setFiles([...files,  value]);
+            };
+            file_reader.readAsDataURL(value);
+        }else{
+            setFormInfo({...formInfo, [name]: value});
+            formData.set(name, value);
+           
+        }
+       
 
 
         }
@@ -63,17 +77,19 @@ const Dashboard = ({auth: { user, loading }}) => {
 
     const handleSubbmitFile = (e) => {
         e.preventDefault(); //NOTE prevent from reload the page 
-        let formData = new FormData(); 
+        console.log('formData topic result is : '+ formData.get('topic'))
+        console.log('formData type result is : '+ formData.get('type'))
 
-        for(var i = 0 ; i < files.length; i++){
-            formData.append('image',files[i])
-        }
+        // for(var i = 0 ; i < files.length; i++){
+        //     formData.append('image',files[i])
+        // }
         
         console.log('formData result: '+ formData.get('image'))
         // console.log('array is' + formData.get('image').length)
+        createBlog({formInfo})
 
         if(!files) return; 
-        uploadImage(formData);
+        // uploadImage(formData);
         
     }
 
@@ -122,26 +138,26 @@ const Dashboard = ({auth: { user, loading }}) => {
                     <form onSubmit={handleSubbmitFile} className="form-outline">
                     <div className="mb-3">
                         <label for="exampleInputEmail1" className="form-label">Topic</label>
-                        <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"/>
+                        <input onChange={handleChange('topic')} type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"/>
                         <div id="emailHelp" className="form-text">You can create the great thing here</div>
 
                         <div className="col-2 mt-4 p-0">
                             <label for="exampleFormControlSelect1">Select type</label>
-                            <select class="form-control" id="exampleFormControlSelect1">
+                            <select onChange={handleChange('type')} class="form-control" id="exampleFormControlSelect1">
                                 <option>Select</option>
-                                <option>Food</option>
-                                <option>Technology</option>
-                                <option>Travel</option>
+                                <option value={'Food'}>Food</option>
+                                <option value={'Technology'}>Technology</option>
+                                <option value={'Travel'}>Travel</option>
                             </select>
                         </div>
 
                     
                         <div class="form-group mt-4">
                             <label for="exampleFormControlFile1">Example file input</label>
-                            <input name="image" onChange={handleChange} type="file" class="form-control-file" id="exampleFormControlFile1"  accept="image/*"/>
+                            <input name="image" onChange={handleChange('image')} type="file" class="form-control-file" id="exampleFormControlFile1"  accept="image/*"/>
 
                             <label for="exampleFormControlFile1">Example file input</label>
-                            <input name="image" onChange={handleChange} type="file" class="form-control-file" id="exampleFormControlFile1"  accept="image/*"/>
+                            <input name="image" onChange={handleChange('image')} type="file" class="form-control-file" id="exampleFormControlFile1"  accept="image/*"/>
                         </div>
 
                         {previewSource && (
@@ -185,4 +201,4 @@ const mapStateToProps = state => ({
     auth : state.auth
 });
 
-export default connect(mapStateToProps) (Dashboard);
+export default connect(mapStateToProps,{createBlog}) (Dashboard);

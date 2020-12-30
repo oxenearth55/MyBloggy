@@ -46,9 +46,16 @@ export const getBlog = (id) => async dispatch => {
     }
 }
 
-export const createBlog = (formData) => async dispatch => {
+export const createBlog = ({formInfo}) => async dispatch => {
     try {
-        const res = await axios.post('/api/blogs');
+        const config = {
+            headers:{
+                'Content-Type' :  'application/json'
+            }
+        }
+        const body = JSON.stringify(formInfo);
+
+        const res = await axios.post('/api/blogs',body,config);
         dispatch({
             type: 'CREATE_BLOG',
             payload: res.data.id
