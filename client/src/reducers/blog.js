@@ -5,11 +5,13 @@ import {
     CLEAR_BLOG,
     CREATE_BLOG,
     CREATE_SUCCESS,
-    CREATE_ERROR
+    CREATE_ERROR,
+    GET_MY_BLOG
 } from '../actions/types';
 
 const initialState = {
     blogs: [], 
+    myBlogs:[],
     blog: null,
     loading: true,
     blogId: null,
@@ -30,6 +32,12 @@ export default function(state = initialState, action){
             return {
                 ...state,
                 blog: payload,
+                loading: false
+            };
+        case GET_MY_BLOG:
+            return {
+                ...state, 
+                myBlogs: payload, 
                 loading: false
             };
         case CREATE_BLOG: 

@@ -11,29 +11,39 @@ const fs = require('fs');
 
 //ANCHOR blog
 //SECTION Create blog 
-router.post('/', [auth,
+router.post('/', [auth,upload.single('image'),
     check('topic', 'Topic is required').not().isEmpty(),
-    check('type', 'Type is required').not().isEmpty()
-    // check('content', 'Content is required').not().isEmpty()
-
+    check('type', 'Type is required').not().isEmpty(),
+    check('content', 'Content is required').not().isEmpty(),
+    check('content', 'Image is required').not().isEmpty()
 ], async (req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()});
     }
-    const { topic, type } = req.body;
+    const { topic, type, content } = req.body;
+    const file = req.file; 
+
     console.log('topic is' + topic);
     console.log('type is' + type);
+    console.log('File is '+ file);
 
     try{
+        const { path } = file;
+        const uploaders = async (path) => await cloudinary.uploader.upload(path)
+        const filePath = await uploaders(path)
+        fs.unlinkSync(path) //NOTE synchronously remove a file or symbolic link from the filesystem
+
         const newBlog = new Blog({
             topic: topic,
             type: type,
-            // content: content,
+            image: filePath.public_id,
+            content: content,
             // section: section,
             user: req.user.id
         })
 
+          
         const PostBlog = await newBlog.save();
         res.json(PostBlog);
     }catch(err){
@@ -62,6 +72,19 @@ router.get('/:id', async (req, res) => {
             return res.status(404).json({msg: 'Blog not found'});
         }
         res.status(500).send('Server get post Error');
+    }
+
+});
+
+//SECTION Get blogs by user Id 
+router.get('/get/myblogs', auth , async (req, res) => {
+    try {
+        const blog = await Blog.find().sort({date:-1});
+        const myBlog = blog.filter(blog => blog.user.toString() === req.user.id);
+        res.json(myBlog);
+        
+    } catch (err) {
+        res.status(500).send('Server get my blog ERROR');
     }
 
 });

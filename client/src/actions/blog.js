@@ -5,7 +5,8 @@ import {
     GET_BLOG,
     CREATE_BLOG,
     CREATE_SUCCESS,
-    CREATE_ERROR
+    CREATE_ERROR,
+    GET_MY_BLOG
 } from './types';
 import {
     setAlert
@@ -46,16 +47,35 @@ export const getBlog = (id) => async dispatch => {
     }
 }
 
-export const createBlog = ({formInfo}) => async dispatch => {
+export const getMyBlogs = () => async dispatch => {
     try {
+        const res = await axios.get('/api/blogs/get/myblogs'); 
+        dispatch({
+            type: GET_MY_BLOG,
+            payload: res.data
+        })
+        
+    } catch (err) {
+        dispatch({
+            type: BLOG_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status }            
+        })
+        
+    }
+} 
+
+export const createBlog = (formData) => async dispatch => {
+    
+    try {
+
         const config = {
             headers:{
                 'Content-Type' :  'application/json'
             }
         }
-        const body = JSON.stringify(formInfo);
+        // const body = JSON.stringify(formInfo);
 
-        const res = await axios.post('/api/blogs',body,config);
+        const res = await axios.post('/api/blogs',formData,config);
         dispatch({
             type: 'CREATE_BLOG',
             payload: res.data.id
