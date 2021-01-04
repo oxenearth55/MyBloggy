@@ -14,8 +14,8 @@ const fs = require('fs');
 router.post('/', [auth,upload.single('image'),
     check('topic', 'Topic is required').not().isEmpty(),
     check('type', 'Type is required').not().isEmpty(),
-    check('content', 'Content is required').not().isEmpty(),
-    check('content', 'Image is required').not().isEmpty()
+    check('type', 'Type is required' ).not().equals('Select'),
+    check('content', 'Content is required').not().isEmpty()
 ], async (req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()){
@@ -80,7 +80,7 @@ router.get('/:id', async (req, res) => {
 router.get('/get/myblogs', auth , async (req, res) => {
     try {
         const blog = await Blog.find().sort({date:-1});
-        const myBlog = blog.filter(blog => blog.user.toString() === req.user.id);
+        const myBlog = blog.filter(blog => blog.user._id.toString() === req.user.id);
         res.json(myBlog);
         
     } catch (err) {

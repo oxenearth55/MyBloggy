@@ -16,9 +16,15 @@ const Blog = ({match, blog:{ blog, loading }, getBlog}) => {
             {blog !== null && !loading ? 
                 <div>
                     <Header section ={blog.type} text={blog.type}/>
-                    
+                    <div className="container my-4">
+                    <h2 className="text-center">{blog.topic}</h2>
+                    <p>{blog.content}</p>
+
+                    </div>
+
 
                 </div>
+                
             
         
         :<Spinner/> }

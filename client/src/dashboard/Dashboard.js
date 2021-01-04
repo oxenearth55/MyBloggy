@@ -7,8 +7,9 @@ import axios from 'axios';
 import {Image} from 'cloudinary-react';
 import {createBlog, getMyBlogs } from '../actions/blog';
 import Blogs from './Blogs';
+import { withRouter, Redirect } from 'react-router-dom';
 
-const Dashboard = ({auth: { user, loading }, blog: { myBlogs} , createBlog, getMyBlogs}) => {
+const Dashboard = ({auth: { user, loading }, blog: { myBlogs, isCreated, blogId} , createBlog, getMyBlogs}, history) => {
     const [addBlog, setAddBlog] = useState(false);
     const [imageId, setImageId] = useState();
     const [previewSource, setPreviewSource] = useState();
@@ -28,12 +29,34 @@ const Dashboard = ({auth: { user, loading }, blog: { myBlogs} , createBlog, getM
         getMyBlogs();
     },[]);
 
+    function RedirectUser (){
+        if(isCreated == true){
+            return <Redirect to = {`/blog/${blogId}`} />
+        }
+    }
+    //NOTE After user clicked close, formInfo will be cleared
+    const clearForm = () => {
+        setFormInfo({
+            topic:'',
+            type: '',
+            content: '',
+            image: null,
+            formData: new FormData()
+                })
+                formData.delete('topic');
+                formData.delete('type');
+                formData.delete('content');
+                formData.delete('image');
+                previewFile(null)
+
+        setAddBlog(false)
+    }
     const AddBlogBtn = () => (
         <Fragment>
             {!addBlog ? <button onClick={() => setAddBlog(true)} type="button" className="btn btn-outline-primary" data-mdb-ripple-color="dark">
                             Add Blog
                         </button> : 
-                        <button onClick={() => setAddBlog(false)} type="button" className="btn btn-danger">Close</button>    
+                        <button onClick={() => clearForm()} type="button" className="btn btn-danger">Close</button>    
             }       
         </Fragment>
        
@@ -62,6 +85,7 @@ const Dashboard = ({auth: { user, loading }, blog: { myBlogs} , createBlog, getM
         }
 
     const previewFile = (file) => {
+        if(file !== null){
         const reader = new FileReader(); //NOTE Read the content of a file stored on the user's computer
         reader.readAsDataURL(file) //NOTE Convert img to String URL
         reader.onloadend = () =>{
@@ -69,7 +93,11 @@ const Dashboard = ({auth: { user, loading }, blog: { myBlogs} , createBlog, getM
             // setImage(reader.result)
             // image.push(reader.result);
         }
-
+    }
+    //NOTE When user click close button, the image will disapear automatically
+    else{
+        setPreviewSource('')
+    }
     }
 
     const handleSubbmitFile = (e) => {
@@ -107,6 +135,7 @@ const Dashboard = ({auth: { user, loading }, blog: { myBlogs} , createBlog, getM
     return (
        
         <Fragment>
+            {RedirectUser()}
             <Header section='dashboard' text='Dashboard'/>
 
             {/* <Image  cloudName="dsrdvi9rl" publicId='nhotmpbfozf1njml4s8n' width="300" crope="scale" /> */}
@@ -147,7 +176,7 @@ const Dashboard = ({auth: { user, loading }, blog: { myBlogs} , createBlog, getM
 
                             </div>
 
-                            {previewSource && (
+                            {previewSource &&(
                                 <div className="col-6 my-5"> 
                                 <img src={previewSource} alt ="Chosen" style={{height: '300px'}}/>
                                 </div>
@@ -206,4 +235,4 @@ const mapStateToProps = state => ({
     blog: state.blog
 });
 
-export default connect(mapStateToProps,{ createBlog, getMyBlogs }) (Dashboard);
+export default connect(mapStateToProps,{ createBlog, getMyBlogs}) (withRouter(Dashboard));
