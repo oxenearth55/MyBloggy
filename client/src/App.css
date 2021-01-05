@@ -371,4 +371,21 @@ h2,p{
     
 }
 
+/* SECTION BLOG */
+.blog .image{
+    width: 800px;
+    height: 350px;
+}
+
+.blog p{
+    font-size: 18px;
+}
+
+.blog .like-dislike{
+    cursor: pointer;
+}
+
+.blog .like-dislike i p {
+    display: inline-block;
+}
 

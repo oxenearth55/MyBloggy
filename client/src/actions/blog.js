@@ -7,7 +7,10 @@ import {
     CREATE_SUCCESS,
     CREATE_ERROR,
     GET_MY_BLOG,
-    CLEAR_CREATED
+    CLEAR_CREATED,
+    ADD_LIKE,
+    UNLIKE,
+    EDIT_BLOG
 } from './types';
 import {
     setAlert
@@ -93,6 +96,75 @@ export const createBlog = (formData) => async dispatch => {
         }
         dispatch({
             type: CREATE_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status }            
+        })
+        
+    }
+}
+
+export const likeBlog = (id) => async dispatch => {
+    try {
+        const res = await axios.put(`/api/blogs/like/${id}`);
+        dispatch({
+            type: ADD_LIKE,
+            payload: res.data
+        })
+        dispatch(setAlert('Like success','success'));
+        
+    } catch (err) {
+        const error = err.response.data; 
+        if(error){
+            dispatch(setAlert(error.msg, 'danger'));
+        }   
+        dispatch({
+            type: BLOG_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status }            
+        })
+
+    }
+}
+
+export const unlikeBlog = (id) => async dispatch => {
+    try {
+        const res = await axios.put(`/api/blogs/unlike/${id}`);
+        dispatch({
+            type: UNLIKE,
+            payload: res.data
+        })
+        dispatch(setAlert('Unlike success', 'success'));
+        
+    } catch (err) {
+        const error = err.response.data; 
+        if(error){
+            dispatch(setAlert(error.msg, 'danger'));
+        }
+        dispatch({
+            type: BLOG_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status }            
+        })  
+    }
+}
+
+export const editBlog = (id,formData) => async dispatch => {
+    try {
+        const config = {
+            headers:{
+                'Content-Type' :  'application/json'
+            }
+        }
+        const res = await axios.put(`/api/blogs/${id}`,formData,config); 
+        dispatch({
+            type: EDIT_BLOG,
+            payload: res.data
+        })
+        
+    } catch (err) {
+        const errors = err.response.data.errors
+        if(errors){
+            errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        }
+        dispatch({
+            type: BLOG_ERROR,
             payload: { msg: err.response.statusText, status: err.response.status }            
         })
         

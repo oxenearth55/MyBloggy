@@ -16,6 +16,9 @@ export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 export const REGISTER_FAIL = 'REGISTER_FAIL';
 export const LOADUSER = 'LOADUSER'; 
 export const LOADUSER_FAIL = 'LOADUSER_FAIL';
+export const ADD_LIKE = 'ADD_LIKE'; 
+export const UNLIKE = 'UNLIKE'; 
+export const EDIT_BLOG = 'EDIT_BLOG';
 
 
 

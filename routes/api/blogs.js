@@ -32,7 +32,7 @@ router.post('/', [auth,upload.single('image'),
         const { path } = file;
         const uploaders = async (path) => await cloudinary.uploader.upload(path)
         const filePath = await uploaders(path)
-        fs.unlinkSync(path) //NOTE synchronously remove a file or symbolic link from the filesystem
+        await fs.unlinkSync(path) //NOTE synchronously remove a file or symbolic link from the filesystem
 
         const newBlog = new Blog({
             topic: topic,
@@ -93,25 +93,35 @@ router.get('/get/myblogs', auth , async (req, res) => {
 router.put('/:id', [auth,
     check('topic', 'Topic is required').not().isEmpty(),
     check('type', 'Type is required').not().isEmpty(),
-    // check('content', 'Content is required').not().isEmpty()
+    check('content', 'Content is required').not().isEmpty()
 ], async (req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()});
     }
     const { topic, type, content } = req.body;
+    // const file = req.file; 
+
 
     try{
         const blog = await Blog.findById(req.params.id);
         if(!blog){
             res.status(404).json({msg:'Blog not found'});
         }
+
+        // const { path } = file;
+        // const uploaders = async (path) => await cloudinary.uploader.upload(path)
+        // const filePath = await uploaders(path)
+        // await fs.unlinkSync(path) 
+        
+
         //NOTE Check, Is this user his/her post
         if(blog.user.toString() === req.user.id){
 
             blog.topic =topic; 
             blog.type = type; 
             blog.content = content;
+            // blog.image = filePath.public_id;
             await blog.save();
             res.json(blog);
 
@@ -183,7 +193,8 @@ router.put('/unlike/:id', auth, async (req, res) => {
         const indexOfLike = blog.likes.map(like => like.user.toString()).indexOf(req.user.id); 
         blog.likes.splice(indexOfLike, 1 ); 
         await blog.save();
-        res.json(blog.likes[indexOfLike]);
+        res.json(blog.likes);
+        // res.json(blog.likes[indexOfLike]);
 
         //NOTE Test type 
         // console.log(typeof blog.likes[0]._id)
@@ -315,74 +326,6 @@ router.put('/comment/unlike/:blogId/:commentId', auth, async (req,res) => {
         res.status(500).send('Sever unlike comment Error');
     }
 })
-
-
-//NOTE Upload image to cloudinary 
-router.post('/upload', async (req ,res) => {
-    try {
-        const fileStr = req.body.data; 
-        const uploadedResponse = await cloudinary.uploader.
-        upload(fileStr, {
-            upload_preset: 'ml_default'
-        })
-        console.log(uploadedResponse);
-        res.json({msg: 'YAAAAA'});
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).send('Server Upload Error');
-        
-    }    
-});
-router.get('/image', async (req,res) => {
-    const { resources }  = await cloudinary.search
-    .expression('public_id: nhotmpbfozf1njml4s8n')
-    // .sort_by('public_id', 'desc')
-    // .max_results(10)
-    .execute()
-
-    console.log('result is' + resources);
-    res.send(resources)
-})
-
-
-router.post('/multer',auth ,upload.array('image'), async (req, res) => { //NOTE image is the field name
-
-    try {
-        const urls = []
-        const files = req.files; 
-        console.log('Upload cloudinary running '+ files)
-      
-
-
-
-        
-        for (const file of files) {
-          const  {path}  = file;
-
-
-
-       const uploaders = async (path) => await cloudinary.uploader.upload(path,(result) => {
-          
-    })
-
-       const newPath = await uploaders(path)
-
-          urls.push(newPath)
-          fs.unlinkSync(path) //NOTE synchronously remove a file or symbolic link from the filesystem
-        }
-        res.json(urls);
-        res.status(200).json({message: 'images uploaded successfully'})
-        
-    } catch (error) {
-        console.error(error.message);
-        res.status(405).json({
-            err: `${req.method} method not allowed`
-          })   
-    }
- 
-
-});
 
 
 //NOTE Get Image from cloudinary

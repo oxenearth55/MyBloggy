@@ -76,12 +76,8 @@ const Dashboard = ({auth: { user, loading }, blog: { myBlogs, isCreated, blogId}
         
         }else{
             setFormInfo({...formInfo, [name]: value});
-            formData.set(name, value);
-           
+            formData.set(name, value);   
         }
-       
-
-
         }
 
     const previewFile = (file) => {
@@ -105,21 +101,7 @@ const Dashboard = ({auth: { user, loading }, blog: { myBlogs, isCreated, blogId}
         createBlog(formData);
     }
 
-    const uploadImage = async (formData) => {
-        try {
-            const config = {
-                headers:{
-                    'Content-Type' :  'application/json'
-                }
-            }
-            // const body = JSON.stringify({data: formData});
-            await axios.post('/api/blogs/multer', formData, config);
-        } catch (error) {
-            console.log(error);
-        }
-
-    }
-
+    
     const loadImage = async () => {
         try {
             const res = await fetch('/api/blogs/image');

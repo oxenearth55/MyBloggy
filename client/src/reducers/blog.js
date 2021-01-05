@@ -1,3 +1,4 @@
+// import { post } from '../../../routes/api/blogs';
 import {
     GET_BLOGS,
     GET_BLOG,
@@ -7,7 +8,10 @@ import {
     CREATE_SUCCESS,
     CREATE_ERROR,
     GET_MY_BLOG,
-    CLEAR_CREATED
+    CLEAR_CREATED,
+    ADD_LIKE,
+    UNLIKE,
+    EDIT_BLOG
 } from '../actions/types';
 
 const initialState = {
@@ -31,6 +35,7 @@ export default function(state = initialState, action){
                 loading: false
             };
         case GET_BLOG: 
+        case EDIT_BLOG:
             return {
                 ...state,
                 blog: payload,
@@ -49,6 +54,12 @@ export default function(state = initialState, action){
                 isCreated: true,
                 loading: false
             }
+        case ADD_LIKE: 
+        case UNLIKE:
+            return {
+                ...state,
+                blog: {...state.blog, likes: payload}
+            }       
         case CLEAR_BLOG: 
             return{
                 ...state,

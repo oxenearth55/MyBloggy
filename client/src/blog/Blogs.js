@@ -86,8 +86,11 @@ const Blogs = ({blog: {blogs, loading}, getBlogs}) => {
   return(
     <div>
       <Header section='blogs' text='Blogs'/>
-      {blogs !== null && !loading ?     <MDBDataTable striped bordered small order={['age', 'asc' ]} data={dataColum} /> 
-      : <Spinner/>}
+      <div className="container-fluid my-4">
+        {blogs !== null && !loading ?     <MDBDataTable striped bordered small order={['age', 'asc' ]} data={dataColum} /> 
+        : <Spinner/>}
+      
+      </div>
      
     </div>
   )
