@@ -6,6 +6,7 @@ import Header from '../components/Header';
 import {Image} from 'cloudinary-react';
 import axios from 'axios';
 import Moment from 'react-moment';
+import Comment from './Comment';
 
 
 const Blog = ({match, auth:{user} ,blog:{ blog, loading }, getBlog, likeBlog, unlikeBlog, editBlog}) => {
@@ -50,8 +51,6 @@ const Blog = ({match, auth:{user} ,blog:{ blog, loading }, getBlog, likeBlog, un
         <Fragment>
             {blog !== null && !loading ? 
                 <div>
-                    <Header section ={blog.type} text={blog.type}/>
-                    <div className="container-fluid blog my-4">
                         <div className="d-flex flex-row justify-content-between ">
                             <div>
                                 <Moment format='DD/MM/YYYY'>{blog.date}</Moment>
@@ -77,7 +76,6 @@ const Blog = ({match, auth:{user} ,blog:{ blog, loading }, getBlog, likeBlog, un
                         </div>
                         <p>{blog.content}</p>
                     </div>
-                    </div>
                 </div>
         :<Spinner/> }
         </Fragment>
@@ -86,7 +84,6 @@ const Blog = ({match, auth:{user} ,blog:{ blog, loading }, getBlog, likeBlog, un
     //SECTION Edit Form 
     const editForm = props => (
         <Fragment>
-            <div className="container">
                         <h2>Edit Blog</h2>
                         <form onSubmit={handleSubbmitFile} className="form-outline my-3">
                         <div className="mb-3">
@@ -124,13 +121,9 @@ const Blog = ({match, auth:{user} ,blog:{ blog, loading }, getBlog, likeBlog, un
                             <button className='btn btn-primary' type='submit'>Edit</button>
                             {isSubmit ? <button onClick={()=>setEdit(false)} className='btn btn-danger' type='submit'>Close</button>
                             :<button onClick={()=>setEdit(false)} className='btn btn-danger' type='submit'>Cancle</button>
-                            }
-
-
-                        
+                            }           
                         </div>
                         </form>
-                    </div>
                     </Fragment>
     )
 
@@ -175,8 +168,17 @@ const Blog = ({match, auth:{user} ,blog:{ blog, loading }, getBlog, likeBlog, un
 
     return (
         <Fragment>
-            
-            {!edit?displayBlog(): editForm()}
+             <Header section ={blog.type} text={blog.type}/>
+             
+               {!edit?<div className="container-fluid blog my-4"> {displayBlog()} {
+                   <Comment/>
+                } </div>      
+               : 
+               <div className="container my-4">
+                    {editForm()} 
+               </div>}
+
+               
             
                      
         </Fragment>

@@ -19,6 +19,8 @@ export const LOADUSER_FAIL = 'LOADUSER_FAIL';
 export const ADD_LIKE = 'ADD_LIKE'; 
 export const UNLIKE = 'UNLIKE'; 
 export const EDIT_BLOG = 'EDIT_BLOG';
+export const CREATE_COMMENT = 'CREATE_COMMENT';
+export const EDIT_COMMENT = 'EDIT_COMMENT';
 
 
 

@@ -11,7 +11,9 @@ import {
     CLEAR_CREATED,
     ADD_LIKE,
     UNLIKE,
-    EDIT_BLOG
+    EDIT_BLOG,
+    CREATE_COMMENT,
+    EDIT_COMMENT
 } from '../actions/types';
 
 const initialState = {
@@ -41,6 +43,11 @@ export default function(state = initialState, action){
                 blog: payload,
                 loading: false
             };
+        case CREATE_COMMENT:
+            return {
+                ...state,
+                blog: {...state.blog, comments: payload}
+            }
         case GET_MY_BLOG:
             return {
                 ...state, 

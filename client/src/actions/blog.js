@@ -11,7 +11,9 @@ import {
     ADD_LIKE,
     UNLIKE,
     EDIT_BLOG,
-    CLEAR_BLOG
+    CLEAR_BLOG,
+    CREATE_COMMENT,
+    EDIT_COMMENT
 } from './types';
 import {
     setAlert
@@ -167,6 +169,34 @@ export const editBlog = (formInfo,id) => async dispatch => {
         if(errors){
             errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
         }
+        dispatch({
+            type: BLOG_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status }            
+        })
+        
+    }
+}
+
+export const createComment = (formData,id) => async dispatch => {
+    try {
+        const config = {
+            headers:{
+                'Content-Type': 'application/json'
+            } 
+        }
+
+        const res = await axios.put(`/api/blogs/comment/${id}`, formData, config);
+        dispatch({
+            type: CREATE_COMMENT,
+            payload: res.data
+        })
+        dispatch(setAlert('Create blog success', 'success'));       
+    } catch (err) {
+        const errors = err.response.data.errors
+        if(errors){
+            errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        }
+
         dispatch({
             type: BLOG_ERROR,
             payload: { msg: err.response.statusText, status: err.response.status }            
