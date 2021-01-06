@@ -12,6 +12,7 @@ const Blog = ({match, blog:{ blog, loading }, getBlog, likeBlog, unlikeBlog, edi
 
     const [edit, setEdit] = useState(false);
     const [previewSource, setPreviewSource] = useState();
+    const [isSubmit, setIsSubmit] = useState(false);
     const [formInfo, setFormInfo] = useState({
         topic: '',
         type: '',
@@ -23,8 +24,29 @@ const Blog = ({match, blog:{ blog, loading }, getBlog, likeBlog, unlikeBlog, edi
     const {topic, type, content, image, formData } = formInfo;
 
     useEffect(() => {
-        getBlog(match.params.id);
-    },[getBlog])
+       getBlog(match.params.id);
+       init();
+  
+    },[edit])
+    
+    //NOTE Prevent props of undefined 
+    const init = () => {
+        if(blog !== null){
+            setFormInfo({...formInfo, 
+                topic: blog.topic, 
+                type: blog.type, 
+                content: blog.content
+            })
+            formData.set('topic', blog.topic);
+            formData.set('type', blog.type);
+            formData.set('content', blog.content);
+
+
+        }
+    }
+
+    
+    
 
     //SECTION Blog
     const displayBlog = props => (
@@ -75,7 +97,7 @@ const Blog = ({match, blog:{ blog, loading }, getBlog, likeBlog, unlikeBlog, edi
 
                             <div className="col-2 mt-4 p-0">
                                 <label for="exampleFormControlSelect1">Select type</label>
-                                <select onChange={handleChange('type')} className="form-control" id="exampleFormControlSelect1">
+                                <select value={type} onChange={handleChange('type')} className="form-control" id="exampleFormControlSelect1">
                                     <option>Select</option>
                                     <option value={'Food'}>Food</option>
                                     <option value={'Technology'}>Technology</option>
@@ -85,7 +107,7 @@ const Blog = ({match, blog:{ blog, loading }, getBlog, likeBlog, unlikeBlog, edi
 
                             <div className="form-group mt-3">
                                 <label for="exampleFormControlTextarea1">Content</label>
-                                <textarea onChange={handleChange('content')} className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <textarea value={content} onChange={handleChange('content')} className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                             </div>
 
                         
@@ -101,7 +123,10 @@ const Blog = ({match, blog:{ blog, loading }, getBlog, likeBlog, unlikeBlog, edi
                                 </div>
                             )}
                             <button className='btn btn-primary' type='submit'>Edit</button>
-                            <button onClick={()=>setEdit(false)} className='btn btn-danger' type='submit'>Cancle</button>
+                            {isSubmit ? <button onClick={()=>setEdit(false)} className='btn btn-danger' type='submit'>Close</button>
+                            :<button onClick={()=>setEdit(false)} className='btn btn-danger' type='submit'>Cancle</button>
+                            }
+
 
                         
                         </div>
@@ -122,6 +147,8 @@ const Blog = ({match, blog:{ blog, loading }, getBlog, likeBlog, unlikeBlog, edi
         }else{
             setFormInfo({...formInfo, [name]: value});
             formData.set(name, value);   
+            console.log('topic is '+ formData.get('topic'));
+
             }
         }
 
@@ -141,7 +168,9 @@ const Blog = ({match, blog:{ blog, loading }, getBlog, likeBlog, unlikeBlog, edi
 
         const handleSubbmitFile = (e) => {
             e.preventDefault(); //NOTE prevent from reload the page 
-            editBlog(blog._id, formData);
+            editBlog(formInfo,blog._id);
+            setIsSubmit(true);
+            
         }
     
 

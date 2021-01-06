@@ -10,7 +10,8 @@ import {
     CLEAR_CREATED,
     ADD_LIKE,
     UNLIKE,
-    EDIT_BLOG
+    EDIT_BLOG,
+    CLEAR_BLOG
 } from './types';
 import {
     setAlert
@@ -23,6 +24,8 @@ export const getBlogs = () => async dispatch => {
             type: GET_BLOGS,
             payload: res.data
         });
+
+        // dispatch({type: CLEAR_BLOG})
 
     }catch(err){
         dispatch({
@@ -145,18 +148,19 @@ export const unlikeBlog = (id) => async dispatch => {
     }
 }
 
-export const editBlog = (id,formData) => async dispatch => {
+export const editBlog = (formInfo,id) => async dispatch => {
     try {
         const config = {
             headers:{
                 'Content-Type' :  'application/json'
             }
         }
-        const res = await axios.put(`/api/blogs/${id}`,formData,config); 
+        const res = await axios.put(`/api/blogs/${id}`,formInfo,config); 
         dispatch({
             type: EDIT_BLOG,
             payload: res.data
         })
+        dispatch(setAlert('Update blog success', 'success'));
         
     } catch (err) {
         const errors = err.response.data.errors

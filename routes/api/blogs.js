@@ -96,11 +96,16 @@ router.put('/:id', [auth,
     check('content', 'Content is required').not().isEmpty()
 ], async (req, res) => {
     const errors = validationResult(req);
+
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()});
     }
     const { topic, type, content } = req.body;
     // const file = req.file; 
+
+    console.log('topic is' + topic);
+    console.log('type is' + type);
+    console.log('content is '+ content);
 
 
     try{
