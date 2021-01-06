@@ -8,7 +8,7 @@ import axios from 'axios';
 import Moment from 'react-moment';
 
 
-const Blog = ({match, blog:{ blog, loading }, getBlog, likeBlog, unlikeBlog, editBlog}) => {
+const Blog = ({match, auth:{user} ,blog:{ blog, loading }, getBlog, likeBlog, unlikeBlog, editBlog}) => {
 
     const [edit, setEdit] = useState(false);
     const [previewSource, setPreviewSource] = useState();
@@ -45,9 +45,6 @@ const Blog = ({match, blog:{ blog, loading }, getBlog, likeBlog, unlikeBlog, edi
         }
     }
 
-    
-    
-
     //SECTION Blog
     const displayBlog = props => (
         <Fragment>
@@ -65,8 +62,10 @@ const Blog = ({match, blog:{ blog, loading }, getBlog, likeBlog, unlikeBlog, edi
                             <div className="like-dislike"> 
                                 <i onClick={() => likeBlog(blog._id)} className ="far fa-2x fa-thumbs-up green-text mx-2"><p>{blog.likes.length}</p></i>
                                 <i onClick={() => unlikeBlog(blog._id)} className ="far fa-2x fa-thumbs-down red-text mx-2"></i>
-                                {edit ? <i onClick={() => setEdit(false)} className="fas fa-2x fa-times mx-4 red-text"></i> 
-                                :   <i onClick={() => setEdit(true)} className="far fa-2x fa-edit mx-4 orange-text"></i> }    
+
+                                {!edit && user !== null && user._id === blog.user._id &&  
+                                      <i onClick={() => setEdit(true)} className="far fa-2x fa-edit mx-4 orange-text"></i> }  
+
                             </div> 
                     </div>
                 
@@ -184,6 +183,7 @@ const Blog = ({match, blog:{ blog, loading }, getBlog, likeBlog, unlikeBlog, edi
     )
 }
 const mapStateToProps = state => ({
-    blog: state.blog
+    blog: state.blog,
+    auth: state.auth
 });
 export default connect(mapStateToProps, { getBlog, likeBlog, unlikeBlog, editBlog })(Blog);
