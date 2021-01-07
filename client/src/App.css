@@ -389,3 +389,18 @@ h2,p{
     display: inline-block;
 }
 
+
+/* SECTION BLOG COMMENTS */
+
+.comments .add-comment i{
+    cursor: pointer;
+}
+
+.comment-profile img{
+    height: 160px
+
+}
+
+.comment-profile p span {
+    font-size: 14px;
+}

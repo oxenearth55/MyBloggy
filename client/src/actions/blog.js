@@ -13,7 +13,9 @@ import {
     EDIT_BLOG,
     CLEAR_BLOG,
     CREATE_COMMENT,
-    EDIT_COMMENT
+    EDIT_COMMENT,
+    LIKE_COMMENT,
+    DEFAULT_BLOG
 } from './types';
 import {
     setAlert
@@ -87,12 +89,13 @@ export const createBlog = (formData) => async dispatch => {
 
         const res = await axios.post('/api/blogs',formData,config);
         dispatch({
-            type: 'CREATE_BLOG',
+            type: CREATE_BLOG,
             payload: res.data._id
         })
-
-        dispatch(setAlert('Create Blog Success', 'success'));
     
+        dispatch(setAlert('Create Blog Success', 'success'));
+
+       
         
     } catch (err) {
         const errors = err.response.data.errors; 
@@ -184,13 +187,15 @@ export const createComment = (formData,id) => async dispatch => {
                 'Content-Type': 'application/json'
             } 
         }
-
         const res = await axios.put(`/api/blogs/comment/${id}`, formData, config);
         dispatch({
             type: CREATE_COMMENT,
             payload: res.data
         })
-        dispatch(setAlert('Create blog success', 'success'));       
+        dispatch(setAlert('Create blog success', 'success'));  
+        dispatch({
+            type: DEFAULT_BLOG
+        })     
     } catch (err) {
         const errors = err.response.data.errors
         if(errors){
@@ -202,5 +207,26 @@ export const createComment = (formData,id) => async dispatch => {
             payload: { msg: err.response.statusText, status: err.response.status }            
         })
         
+    }
+}
+
+export const likeComment = (blogId, commentId) => async dispatch => {
+    try {     
+        const res = await axios.put(`/api/blogs/comment/like/${blogId}/${commentId}`);
+        dispatch({
+            type: LIKE_COMMENT, 
+            payload: res.data
+        })
+        dispatch(setAlert('Like comment success', 'success'));
+        
+    } catch (err) {
+        const error = err.response.data; 
+        if(error){
+            dispatch(setAlert(error.msg, 'danger'));
+        }     
+        dispatch({
+            type: BLOG_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status }            
+        })
     }
 }

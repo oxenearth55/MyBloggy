@@ -175,6 +175,7 @@ const Dashboard = ({auth: { user, loading }, blog: { myBlogs, isCreated, blogId}
                     <Fragment>
                         {/* SECTION User details */}
                     <h2 className="">User details </h2>
+                    <img src={user.avatar} alt="" className="rounded-circle border"/>
                     <table className="table table-striped table-hover ">
                         <thead>
                             <tr>

@@ -4,12 +4,11 @@ import { getBlog, likeBlog, unlikeBlog, editBlog } from '../actions/blog';
 import Spinner from '../components/Spinner';
 import Header from '../components/Header';
 import {Image} from 'cloudinary-react';
-import axios from 'axios';
 import Moment from 'react-moment';
 import Comment from './Comment';
 
 
-const Blog = ({match, auth:{user} ,blog:{ blog, loading }, getBlog, likeBlog, unlikeBlog, editBlog}) => {
+const Blog = ({match, auth:{user} ,blog:{ blog, loading, success }, getBlog, likeBlog, unlikeBlog, editBlog}) => {
 
     const [edit, setEdit] = useState(false);
     const [previewSource, setPreviewSource] = useState();
@@ -76,7 +75,12 @@ const Blog = ({match, auth:{user} ,blog:{ blog, loading }, getBlog, likeBlog, un
                         </div>
                         <p>{blog.content}</p>
                     </div>
+                    
+                    <Comment blog={blog} success={success}/>
+
                 </div>
+
+                
         :<Spinner/> }
         </Fragment>
     )
@@ -168,11 +172,13 @@ const Blog = ({match, auth:{user} ,blog:{ blog, loading }, getBlog, likeBlog, un
 
     return (
         <Fragment>
-             <Header section ={blog.type} text={blog.type}/>
+            {blog !== null && !loading &&
+                         <Header section ={blog.type} text={blog.type}/>
+} 
              
-               {!edit?<div className="container-fluid blog my-4"> {displayBlog()} {
-                   <Comment/>
-                } </div>      
+               {!edit?<div className="container-fluid blog my-4"> {displayBlog()}
+                </div>    
+
                : 
                <div className="container my-4">
                     {editForm()} 
@@ -188,4 +194,4 @@ const mapStateToProps = state => ({
     blog: state.blog,
     auth: state.auth
 });
-export default connect(mapStateToProps, { getBlog, likeBlog, unlikeBlog, editBlog })(Blog);
+export default connect(mapStateToProps, { getBlog, likeBlog, unlikeBlog, editBlog})(Blog);

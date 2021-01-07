@@ -21,6 +21,10 @@ export const UNLIKE = 'UNLIKE';
 export const EDIT_BLOG = 'EDIT_BLOG';
 export const CREATE_COMMENT = 'CREATE_COMMENT';
 export const EDIT_COMMENT = 'EDIT_COMMENT';
+export const LIKE_COMMENT = 'LIKE_COMMENT'; 
+export const DEFAULT_BLOG = 'DEFAULT_BLOG';
+
+
 
 
 

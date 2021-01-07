@@ -3,6 +3,7 @@ const router = express.Router();
 const {check, validationResult} = require('express-validator'); 
 const User = require('../../models/User');
 const bcrypt = require('bcryptjs');
+const gravatar = require('gravatar');
 
 //ANCHOR @route: POST api/users
 //ANCHOR @Description: Register users
@@ -38,11 +39,20 @@ router.post('/',[ //NOTE middleware
        return res.status(400).json({errors: [{msg:'User already exists'}]});
     }
     
+    //ANCHOR Get user gravatar
+
+    const avatar = gravatar.url(email,{
+        s: '200', //size
+        r: 'pg',
+        d: 'mp' //default: when user don't have avatar on email
+    })
+    
     //NOTE user maintain these properties before saving in the database
     user = new User({
         firstName,
         lastName,
         email,
+        avatar,
         password
     });
 

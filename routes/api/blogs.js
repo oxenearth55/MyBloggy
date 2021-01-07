@@ -65,7 +65,7 @@ router.get('/', async (req,res) => {
 //SECTION Get a blog by id
 router.get('/:id', async (req, res) => {
     try{
-        const blog = await Blog.findById(req.params.id).populate('user','name').populate('comments.user', 'name');
+        const blog = await Blog.findById(req.params.id).populate('user','name').populate('comments.user');
         res.json(blog);
     }catch(err){
         if(err.kind == 'ObjectId'){ //NOTE if can not find blog id in database 
@@ -220,7 +220,7 @@ router.put('/unlike/:id', auth, async (req, res) => {
 //ANCHOR comments
 //SECTION Create Comment 
 //NOTE create comment in specific blog
-router.post('/comment/:blogId',[auth,
+router.put('/comment/:id',[auth,
     check('text', 'Text is required ').not().isEmpty()
 ], async (req, res) => {
     const errors = validationResult(req); 
@@ -228,8 +228,11 @@ router.post('/comment/:blogId',[auth,
         res.status(400).json({errors:errors.array()});
     }
     const {text} = req.body;
+
+    console.log('text is' + text);
+
     try{
-        const blog = await Blog.findById(req.params.blogId);
+        const blog = await Blog.findById(req.params.id).populate('comments.user');
 
         const newComment = {
             text:text, 
@@ -296,7 +299,7 @@ router.put('/comment/like/:blogId/:commentId', auth, async (req,res) => {
 
         comment.likes.unshift({user: req.user.id});
         blog.save();
-        json(blog.comments);
+        res.json(blog.comments);
 
 
     }catch(err){

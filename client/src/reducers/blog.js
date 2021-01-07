@@ -13,7 +13,9 @@ import {
     UNLIKE,
     EDIT_BLOG,
     CREATE_COMMENT,
-    EDIT_COMMENT
+    EDIT_COMMENT,
+    LIKE_COMMENT,
+    DEFAULT_BLOG
 } from '../actions/types';
 
 const initialState = {
@@ -23,7 +25,8 @@ const initialState = {
     isCreated: false,
     loading: true,
     blogId: null,
-    error:{} 
+    error:{},
+    success:false
 }
 
 export default function(state = initialState, action){
@@ -44,9 +47,11 @@ export default function(state = initialState, action){
                 loading: false
             };
         case CREATE_COMMENT:
+        case LIKE_COMMENT:
             return {
                 ...state,
-                blog: {...state.blog, comments: payload}
+                blog: {...state.blog, comments: payload},
+                success: true
             }
         case GET_MY_BLOG:
             return {
@@ -66,7 +71,13 @@ export default function(state = initialState, action){
             return {
                 ...state,
                 blog: {...state.blog, likes: payload}
-            }       
+            }   
+        case DEFAULT_BLOG: 
+            return {
+                ...state,
+                success: false
+            }
+       
         case CLEAR_BLOG: 
             return{
                 ...state,
