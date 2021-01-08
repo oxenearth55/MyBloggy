@@ -13,9 +13,12 @@ import {
     EDIT_BLOG,
     CLEAR_BLOG,
     CREATE_COMMENT,
+    DELETE_COMMENT,
     EDIT_COMMENT,
     LIKE_COMMENT,
-    DEFAULT_BLOG
+    UNLIKE_COMMENT,
+    DEFAULT_SUCCESS,
+    DELETE_BLOG
 } from './types';
 import {
     setAlert
@@ -48,7 +51,7 @@ export const getBlog = (id) => async dispatch => {
             type: GET_BLOG,
             payload: res.data
         })
-        dispatch({type: CLEAR_CREATED })
+        // dispatch({type: CLEAR_CREATED })
 
     }catch(err){
         dispatch({
@@ -94,6 +97,7 @@ export const createBlog = (formData) => async dispatch => {
         })
     
         dispatch(setAlert('Create Blog Success', 'success'));
+        dispatch({type: CLEAR_CREATED })
 
        
         
@@ -118,6 +122,7 @@ export const likeBlog = (id) => async dispatch => {
             payload: res.data
         })
         dispatch(setAlert('Like success','success'));
+        dispatch({type: DEFAULT_SUCCESS})
         
     } catch (err) {
         const error = err.response.data; 
@@ -194,8 +199,9 @@ export const createComment = (formData,id) => async dispatch => {
         })
         dispatch(setAlert('Create blog success', 'success'));  
         dispatch({
-            type: DEFAULT_BLOG
-        })     
+            type: DEFAULT_SUCCESS
+        })    
+       
     } catch (err) {
         const errors = err.response.data.errors
         if(errors){
@@ -218,8 +224,120 @@ export const likeComment = (blogId, commentId) => async dispatch => {
             payload: res.data
         })
         dispatch(setAlert('Like comment success', 'success'));
+        dispatch({
+            type: DEFAULT_SUCCESS
+        })     
         
     } catch (err) {
+        const error = err.response.data; 
+        if(error){
+            dispatch(setAlert(error.msg, 'danger'));
+        }     
+        dispatch({
+            type: BLOG_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status }            
+        })
+    }
+}
+
+export const unlikeComment = (blogId, commentId) => async dispatch => {
+    try {     
+        const res = await axios.put(`/api/blogs/comment/unlike/${blogId}/${commentId}`);
+        dispatch({
+            type: UNLIKE_COMMENT, 
+            payload: res.data
+        })
+        dispatch(setAlert('Unlike comment success', 'success'));
+        dispatch({
+            type: DEFAULT_SUCCESS
+        })     
+        
+    } catch (err) {
+        const error = err.response.data; 
+        if(error){
+            dispatch(setAlert(error.msg, 'danger'));
+        }     
+        dispatch({
+            type: BLOG_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status }            
+        })
+    }
+}
+
+export const editComment = (formData,blogId, commentId) => async dispatch => {
+    try {
+
+        const config = {
+            headers:{
+                'Content-Type': 'application/json'
+            } 
+        }
+        const res = await axios.put(`/api/blogs/comment/edit/${blogId}/${commentId}`,formData, config);
+        dispatch({
+            type:EDIT_COMMENT,
+            payload: res.data
+        })
+
+        dispatch(setAlert('Edit comment success', 'success'));
+        dispatch({
+            type: DEFAULT_SUCCESS
+        })     
+
+
+
+        
+    } catch (err) {
+        const errors = err.response.data.errors
+        if(errors){
+            errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        }
+
+        dispatch({
+            type: BLOG_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status }            
+        })
+    }
+}
+
+export const deleteBlog = (id) => async dispatch => {
+    try{
+        const res = await axios.delete(`/api/blogs/${id}`);
+        dispatch({
+            type: DELETE_BLOG, 
+            payload: res.data
+        })
+        dispatch(setAlert('Delete blog success', 'success'));
+       
+
+    }catch(err){
+        const error = err.response.data; 
+        if(error){
+            dispatch(setAlert(error.msg, 'danger'));
+        }     
+        dispatch({
+            type: BLOG_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status }            
+        })
+    }
+}
+
+
+export const deleteComment = (blogId, commentId) => async dispatch => {
+    try{
+        const res = await axios.put(`/api/blogs/comment/${blogId}/${commentId}`);
+        dispatch({
+            type: DELETE_COMMENT, 
+            payload: res.data
+        })
+        dispatch(setAlert('Delete comment success', 'success'));
+        dispatch({
+            type: DEFAULT_SUCCESS
+        })     
+
+
+
+
+    }catch(err){
         const error = err.response.data; 
         if(error){
             dispatch(setAlert(error.msg, 'danger'));

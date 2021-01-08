@@ -106,19 +106,15 @@ router.put('/:id', [auth,
     console.log('topic is' + topic);
     console.log('type is' + type);
     console.log('content is '+ content);
-
-
     try{
         const blog = await Blog.findById(req.params.id);
         if(!blog){
             res.status(404).json({msg:'Blog not found'});
         }
-
         // const { path } = file;
         // const uploaders = async (path) => await cloudinary.uploader.upload(path)
         // const filePath = await uploaders(path)
         // await fs.unlinkSync(path) 
-        
 
         //NOTE Check, Is this user his/her post
         if(blog.user.toString() === req.user.id){
@@ -250,8 +246,46 @@ router.put('/comment/:id',[auth,
     } 
 });
 
+// SECTION Edit Comment 
+router.put('/comment/edit/:blogId/:commentId', [auth,
+    check('text', 'Text is required ').not().isEmpty()
+], 
+
+async (req, res) => {
+    const errors = validationResult(req); 
+    if(!errors.isEmpty()){
+        res.status(400).json({errors:errors.array()});
+    }
+    const { text } = req.body
+    console.log('text is ' + text)
+    try{
+        const blog = await Blog.findById(req.params.blogId);
+        const comment = blog.comments.find(comment => comment._id.toString() === req.params.commentId);
+        if(!comment){
+            res.status(400).json({msg:'Comment does not exist'});
+        }
+        if(comment.user.toString() === req.user.id){
+            comment.text = text; 
+            await blog.save();
+            res.json(blog.comments);
+          
+        }else{
+            res.status(401).json({msg: 'Unauthorized to edit this blog'})
+        }
+
+     
+
+
+    }catch(err){
+        res.status(500).send('Server edit commment Error');
+    }
+
+})
+
+
+
 //SECTION Delete the comment 
-router.delete('/comment/:blogId/:commentId', auth ,async (req, res) => {
+router.put('/comment/:blogId/:commentId', auth ,async (req, res) => {
     try{
         const blog = await Blog.findById(req.params.blogId);
 
@@ -290,11 +324,11 @@ router.put('/comment/like/:blogId/:commentId', auth, async (req,res) => {
         const comment = blog.comments.find(comment => comment._id.toString() === req.params.commentId);
 
         if(!comment){
-            res.status(400).json({msg:'Comment does not exist'});
+            return res.status(400).json({msg:'Comment does not exist'});
         }
 
         if(comment.likes.filter(like => like.user.toString() === req.user.id).length > 0) {
-           return res.status(400).json({msg:'You already liked this blog '});          
+           return res.status(400).json({msg:'You already liked this comment '});          
         }
 
         comment.likes.unshift({user: req.user.id});
@@ -320,7 +354,7 @@ router.put('/comment/unlike/:blogId/:commentId', auth, async (req,res) => {
             return res.status(400).json({msg:'Comment does not exist'});
         }
         if(comment.likes.filter(like => like.user.toString() === req.user.id).length <= 0 ){
-            return res.status(400).json({mag:'You have not liked this blog'});
+            return res.status(400).json({msg:'You have not liked this blog'});
         }
 
         const indexOfUnlike = comment.likes.map(like => like.user.toString()).indexOf(req.user.id);

@@ -22,7 +22,10 @@ export const EDIT_BLOG = 'EDIT_BLOG';
 export const CREATE_COMMENT = 'CREATE_COMMENT';
 export const EDIT_COMMENT = 'EDIT_COMMENT';
 export const LIKE_COMMENT = 'LIKE_COMMENT'; 
-export const DEFAULT_BLOG = 'DEFAULT_BLOG';
+export const UNLIKE_COMMENT = 'UNLIKE_COMMENT';
+export const DEFAULT_SUCCESS = 'DEFAULT_SUCCESS';
+export const DELETE_COMMENT = 'DELETE_COMMENT';
+export const DELETE_BLOG = 'DELETE_BLOG';
 
 
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { getBlog, likeBlog, unlikeBlog, editBlog } from '../actions/blog';
+import { getBlog, likeBlog, unlikeBlog, editBlog, deleteBlog } from '../actions/blog';
 import Spinner from '../components/Spinner';
 import Header from '../components/Header';
 import {Image} from 'cloudinary-react';
@@ -8,7 +8,7 @@ import Moment from 'react-moment';
 import Comment from './Comment';
 
 
-const Blog = ({match, auth:{user} ,blog:{ blog, loading, success }, getBlog, likeBlog, unlikeBlog, editBlog}) => {
+const Blog = ({match, auth:{user} ,blog:{ blog, loading, success }, getBlog, likeBlog, unlikeBlog, editBlog, deleteBlog}) => {
 
     const [edit, setEdit] = useState(false);
     const [previewSource, setPreviewSource] = useState();
@@ -26,7 +26,6 @@ const Blog = ({match, auth:{user} ,blog:{ blog, loading, success }, getBlog, lik
     useEffect(() => {
        getBlog(match.params.id);
        init();
-  
     },[edit])
     
     //NOTE Prevent props of undefined 
@@ -88,7 +87,16 @@ const Blog = ({match, auth:{user} ,blog:{ blog, loading, success }, getBlog, lik
     //SECTION Edit Form 
     const editForm = props => (
         <Fragment>
-                        <h2>Edit Blog</h2>
+            <div className="d-flex justify-content-between">
+                <h2>Edit Blog</h2>
+                <div className="">  
+                    <button onClick={()=>deleteBlog(blog._id)} className='btn btn-danger'>delete
+                    <i className="fas fa-times white-text ml-2"></i>
+                    
+                    </button>
+                </div>
+            </div>
+                      
                         <form onSubmit={handleSubbmitFile} className="form-outline my-3">
                         <div className="mb-3">
                             <label for="exampleInputEmail1" className="form-label">Topic</label>
@@ -194,4 +202,4 @@ const mapStateToProps = state => ({
     blog: state.blog,
     auth: state.auth
 });
-export default connect(mapStateToProps, { getBlog, likeBlog, unlikeBlog, editBlog})(Blog);
+export default connect(mapStateToProps, { getBlog, likeBlog, unlikeBlog, editBlog, deleteBlog})(Blog);
