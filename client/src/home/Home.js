@@ -15,13 +15,14 @@ const Home = () => {
          <Section1/>
          
             <Section2/>
+
          <div className="container-fluid">
              <div className="row">
-                 <div className="col-8">
+                 <div className="col-lg-8 col-sm-12">
                  <Section3/>
                  </div>
 
-                 <div className="col-4">
+                 <div className="col-lg-4 col-sm-12">
                  <Sidebar/>
                  </div>
             

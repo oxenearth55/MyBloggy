@@ -11,9 +11,9 @@ const SideBar = ({blog:{blogs, loading}}) => {
 
 
     return (
-        <div className="sidebar">
+        <div className="sidebar row justify-content-center">
             {/* SECTION Profile */}
-            <div className="about-me">
+            <div className="about-me col-12">
                 <div className="header">
                     <h3>About Me
                     <div className="line"></div>
@@ -23,18 +23,16 @@ const SideBar = ({blog:{blogs, loading}}) => {
                 <div className="profile-img text-center">
                     <img src={profile} alt=""/>
                 </div>
+
                 <div className="text-center my-3">
                     <h4>Tanawat Limsakul</h4>
-                    <div className="d-flex justify-content-center">
-                        <div className="col-8 ">
-                            <p>I'm Full-Stack developers who can use MERN stack to develop web application </p>
-                        </div>
-                    </div>            
+                    <p>I'm Full-Stack developers who can use MERN stack to develop web application </p>
                 </div>
+
             </div>
 
             {/* SECTION Social */}
-            <div className="social mt-">
+            <div className="social">
                 <div className="header"> 
                     <h3>SUBSCRIBE & FOLLOW
                         <div className="line"></div>
@@ -71,7 +69,7 @@ const SideBar = ({blog:{blogs, loading}}) => {
                 </div>
             </div>
           {/* SECTION  Popular blog */}
-          <div className="popular-blog mt-">
+          <div className="popular-blog container mt-">
             <div className="header"> 
                 <h3>Popular Blogs
                     <div className="line"></div>
@@ -83,7 +81,7 @@ const SideBar = ({blog:{blogs, loading}}) => {
                 {blogs.sort((a,b) => (b.likes.length > a.likes.length) ? 1 : ((a.likes.length > b.likes.length ) ? -1 : 0)).slice(0,4).map(blog => 
                     <div className="row popular my-4">
                     <div className="col-6 ">
-                    <Image className="image"  cloudName="dsrdvi9rl" publicId={blog.image} width="300"  crope="scale" />
+                    <Image className="image ml-2"  cloudName="dsrdvi9rl" publicId={blog.image} width="300"  crope="scale" />
                     </div>
                     <div className="col-6 p-0">
                         <div className="date">

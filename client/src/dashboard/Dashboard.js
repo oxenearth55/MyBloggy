@@ -2,16 +2,12 @@ import React, {Fragment, useState, useEffect} from 'react';
 import { connect } from 'react-redux';
 import Header from '../components/Header';
 import Spinner from '../components/Spinner';
-import AddBlog from './AddBlog';
-import axios from 'axios';
-import {Image} from 'cloudinary-react';
 import {createBlog, getMyBlogs } from '../actions/blog';
 import Blogs from './Blogs';
 import { withRouter, Redirect } from 'react-router-dom';
 
 const Dashboard = ({auth: { user, loading }, blog: { myBlogs, isCreated, blogId} , createBlog, getMyBlogs}, history) => {
     const [addBlog, setAddBlog] = useState(false);
-    const [imageId, setImageId] = useState();
     const [previewSource, setPreviewSource] = useState();
 
     const [formInfo, setFormInfo] = useState({
@@ -22,9 +18,8 @@ const Dashboard = ({auth: { user, loading }, blog: { myBlogs, isCreated, blogId}
         formData: new FormData()
     });
 
-    const {formData } = formInfo
-
-    
+    const {formData, image, topic, type, content } = formInfo
+   
     useEffect( () => {
         getMyBlogs();
     },[]);
@@ -34,6 +29,8 @@ const Dashboard = ({auth: { user, loading }, blog: { myBlogs, isCreated, blogId}
             return <Redirect to = {`/blog/${blogId}`} />
         }
     }
+    
+    
     //NOTE After user clicked close, formInfo will be cleared
     const clearForm = () => {
         setFormInfo({
@@ -101,18 +98,6 @@ const Dashboard = ({auth: { user, loading }, blog: { myBlogs, isCreated, blogId}
         createBlog(formData);
     }
 
-    
-    const loadImage = async () => {
-        try {
-            const res = await fetch('/api/blogs/image');
-            const data = await res.json();
-            setImageId(data);
-
-        } catch (error) {
-            
-        }
-    }
-
 
     return (
        
@@ -159,11 +144,15 @@ const Dashboard = ({auth: { user, loading }, blog: { myBlogs, isCreated, blogId}
                             </div>
 
                             {previewSource &&(
-                                <div className="col-6 my-5"> 
-                                <img src={previewSource} alt ="Chosen" style={{height: '300px'}}/>
+                                <div className="col-6 my-5 preview"> 
+                                <img src={previewSource} alt ="Chosen"/>
                                 </div>
                             )}
-                            <button className='btn btn-danger' type='submit'>Submit</button>
+                            {image !== null && topic !== '' && type !== '' && type!== 'Select' && content !== '' ?
+                            
+                            <button className='btn btn-primary' type='submit'>Submit</button>
+                            :  <div className='btn btn-outline-dark'>Submit</div>
+}
                         
                         </div>
                         </form>

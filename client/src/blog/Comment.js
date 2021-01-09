@@ -36,7 +36,7 @@ const Comment = ({auth:{user}, success, blog:{blog}, likeComment, getBlog, unlik
                 <h2 className="text-center">Comments</h2>
             </div>
             <div className="add-comment">
-                {!addComment && 
+                {!addComment && user!== null && 
                     <i onClick={() => setAddComment(true)} class="fas fa-2x fa-plus-circle blue-text"></i>
                 }
             </div>
@@ -46,8 +46,8 @@ const Comment = ({auth:{user}, success, blog:{blog}, likeComment, getBlog, unlik
     const comments = props => (
         <Fragment>
             {blog !== null && blog.comments.map(comment => 
-                <div className="row justify-content-cente my-4">            
-                    <div className="col-4 ml-4 comment-profile">
+                <div className="row justify-content-center my-4">            
+                    <div className="col-lg-4 col-sm-12 ml-4 comment-profile">
                         <div className="d-flex justify-content-between border">
                         <img src={comment.user.avatar} alt="" className="rounded-circle border"/>
                         <div className="text-center">
@@ -58,7 +58,7 @@ const Comment = ({auth:{user}, success, blog:{blog}, likeComment, getBlog, unlik
                       
                         
                     </div>
-                    <div className="col-6 border">
+                    <div className="col-lg-6 col-sm-12 border">
                         <div className="comment-header border-bottom p-2">
                             <div className="d-flex justify-content-between">
                                 <div className=""> 

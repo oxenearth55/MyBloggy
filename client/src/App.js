@@ -24,6 +24,7 @@ import Menu from './menu_footer/Menu';
 import Alert from './components/Alert';
 
 import './App.css';
+import './responsive.css';
 
 //NOTE check localStorage that there is any token there?
 if(localStorage.token){

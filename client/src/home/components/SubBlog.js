@@ -7,8 +7,8 @@ import {Image} from 'cloudinary-react';
 const SubBlog = ({image, title, content,date, type ,id}) => {
     return (
 
-        <div className="col-6 my-3">
-            <Image className="image"  cloudName="dsrdvi9rl" publicId={image}  crope="scale" />
+        <div className="col-lg-6 col-sm-12 my-3">
+            <Image className="image" cloudName="dsrdvi9rl" publicId={image}  crope="scale" />
 
             {/* <img src={image} alt=""/> */}
             <div className="date my-3">

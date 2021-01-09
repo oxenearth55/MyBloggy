@@ -1,0 +1,84 @@
+
+
+@media only screen and (max-width: 800px){
+
+/* ANCHOR Home */
+/* SECTION Intro */
+.intro{
+    height: 80vh;
+}
+
+.intro h2{
+    font-size: 30px;
+    
+}
+
+/* SECTION 1 */
+
+.sec-1 .heading-line {
+    height: 40%;
+    width:  40%;
+}
+.sec-1 p{
+    font-size:18px;
+}
+
+/* SECTION 2 */
+
+.sec-2 .topic h2{
+    font-size: 36px;
+}
+.sec-2 .card img{
+    width:100%;
+}
+
+.sec-2 .card{
+    width: 100%;
+    height: 55%;
+    /* border: solid 2px black; */
+    border:none;
+}
+/* SECTION 3 */
+.sec-3 .sub-blog img{
+    width: 100%; 
+    height: 40%;
+    
+}
+/* ANCHOR Auth */
+/* SECTION LOGIN */
+.auth-image img{
+    width:100%;
+    height: 180px;
+}
+/* ANCHOR Blog */
+ /* SECTION Create Blog  */
+ .preview img {
+   
+   width: 100%;
+   height: 100%;
+}
+/* SECTION BLOG by id */
+.blog .image{
+    width: 100%;
+}
+
+}
+
+@media screen and (max-width: 400px) {
+
+/* ANCHOR Home */
+/* SECTION Intro */
+    .intro h2{
+        font-size: 20px;
+    }
+
+    /* ANCHOR Menu */
+    .menu-bar a{
+        text-decoration: none; 
+        color: #333; 
+        font-weight: 800;
+        font-size: 16px;
+    
+    }
+    
+}

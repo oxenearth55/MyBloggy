@@ -31,9 +31,10 @@ const Login = ({ auth : {isAuthenticated}, login}) => {
     return (
         
         
-        <div className="container-fluid pl-0">
-            <div className="row">
+        <div className="container-fluid login">
+            <div className="row justify-content-center">
                 {/* SECTION Picture */}
+    
                 <div className="col-6">
                     <div className="auth-image">
                         <img src={loginPhoto} alt=""/>           
@@ -41,7 +42,7 @@ const Login = ({ auth : {isAuthenticated}, login}) => {
                 </div>
                
                 {/* SECTION Login Form */}
-                <div className="col-6 mt-5">
+                <div className="col-lg-6 col-sm-12 mt-3">
 
                     <form onSubmit ={(e) => submitLogin(e) } className="form" >
                         <h2 className="text-center">Welcome and Let begin</h2>

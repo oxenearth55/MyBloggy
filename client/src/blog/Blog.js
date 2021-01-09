@@ -48,17 +48,17 @@ const Blog = ({match, auth:{user} ,blog:{ blog, loading, success }, getBlog, lik
 
     //SECTION Blog
     const displayBlog = props => (
-        <Fragment>
+        <div className="container-fluid">
             {blog !== null && !loading ? 
-                <div>
-                        <div className="d-flex flex-row justify-content-between ">
-                            <div>
+                <div className="blog">
+                        <div className="row justify-content-between ">
+                            <div className="col-lg-2 col-sm-12">
                                 <Moment format='DD/MM/YYYY'>{blog.date}</Moment>
                             </div>
-                            <div>
+                            <div className="col-lg-8 col-sm-12 text-center my-4">
                                 <h2>{blog.topic}</h2>
-                            </div>                       
-                            <div className="like-dislike"> 
+                            </div>     
+                            <div className="like-dislike col-lg-2 col-sm-12 text-center"> 
                                 <i onClick={() => likeBlog(blog._id)} className ="far fa-2x fa-thumbs-up green-text mx-2"><p>{blog.likes.length}</p></i>
                                 <i onClick={() => unlikeBlog(blog._id)} className ="far fa-2x fa-thumbs-down red-text mx-2"></i>
 
@@ -68,10 +68,10 @@ const Blog = ({match, auth:{user} ,blog:{ blog, loading, success }, getBlog, lik
                             </div> 
                     </div>
                 
-                    <div className="container">
+                    <div className="container blog-image">
                         <div className = "text-center my-3">
                             <div className= "col-12">
-                                <Image className="image"  cloudName="dsrdvi9rl" publicId={blog.image} width="300" crope="scale" />
+                                <Image className="image"  cloudName="dsrdvi9rl" publicId={blog.image}  crope="scale" />
                             </div>        
                         </div>
                         <p>{blog.content}</p>
@@ -83,7 +83,7 @@ const Blog = ({match, auth:{user} ,blog:{ blog, loading, success }, getBlog, lik
 
                 
         :<Spinner/> }
-        </Fragment>
+        </div>
     )
 
     //SECTION Edit Form 
@@ -120,16 +120,9 @@ const Blog = ({match, auth:{user} ,blog:{ blog, loading, success }, getBlog, lik
                                 <textarea value={content} onChange={handleChange('content')} className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                             </div>
 
-                        
-                            {/* <div className="form-group mt-4">
-                                <label for="exampleFormControlFile1">Select Image</label>
-                                <input name="image" onChange={handleChange('image')} type="file" className="form-control-file" id="exampleFormControlFile1"  accept="image/*"/>
-
-                            </div> */}
-
                             {previewSource &&(
-                                <div className="col-6 my-5"> 
-                                <img src={previewSource} alt ="Chosen" style={{height: '300px'}}/>
+                                <div className="col-6 my-5 preview"> 
+                                <img className="images" src={previewSource} alt ="Chosen" />
                                 </div>
                             )}
                             <button className='btn btn-primary' type='submit'>Edit</button>
@@ -184,8 +177,8 @@ const Blog = ({match, auth:{user} ,blog:{ blog, loading, success }, getBlog, lik
         <Fragment>
             {blog !== null && !loading &&
                          <Header section ={blog.type} text={blog.type}/>
-} 
-             
+            } 
+            
                {!edit?<div className="container-fluid blog my-4"> {displayBlog()}
                 </div>    
 
@@ -193,10 +186,7 @@ const Blog = ({match, auth:{user} ,blog:{ blog, loading, success }, getBlog, lik
                <div className="container my-4">
                     {editForm()} 
                </div>}
-
-               
-            
-                     
+                                
         </Fragment>
     )
 }

@@ -30,7 +30,7 @@ const Section3 = ({getBlogs, blog: {blogs, loading}  }) => {
             </div>          
             </div>
              
-             <div className="sub-blog mt-1">
+             <div className="sub-blog mt-1 mb-2">
                  {loading ?  <Spinner/> : 
                  <div className="row text-center">
                     {blogs.slice(0,4).map(blog => 
