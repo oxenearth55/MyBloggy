@@ -1,0 +1,4 @@
+{
+    "mongoURI": "mongodb+srv://oxenearth55:096997619@blog.4acid.mongodb.net/blog?retryWrites=true&w=majority",
+    "jwtSecret": "MYNAMEisToffee"
+}

@@ -4,7 +4,6 @@ import SubBlog from './components/SubBlog';
 import { connect } from 'react-redux';
 import { getBlogs } from '../actions/blog';
 import Spinner from '../components/Spinner';
-import blog from '../reducers/blog';
 
 const Section3 = ({getBlogs, blog: {blogs, loading}  }) => {
     useEffect(() => {
@@ -32,10 +31,10 @@ const Section3 = ({getBlogs, blog: {blogs, loading}  }) => {
             </div>
              
              <div className="sub-blog mt-1">
-                 {loading ? <Spinner/> : 
+                 {loading ?  <Spinner/> : 
                  <div className="row text-center">
-                    {blogs.map(blog => 
-                    <SubBlog image={photo} title={blog.title} content={blog.content} date={blog.date} type={blog.type} /> )
+                    {blogs.slice(0,4).map(blog => 
+                    <SubBlog id={blog._id} image={blog.image} title={blog.title} content={blog.topic} date={blog.date} type={blog.type} /> )
                     
                 }                   
                  </div>

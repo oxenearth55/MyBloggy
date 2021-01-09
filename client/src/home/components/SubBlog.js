@@ -1,11 +1,16 @@
 import React from 'react';
 import Moment from 'react-moment';
+import { Link } from 'react-router-dom';
+import {Image} from 'cloudinary-react';
 
-const SubBlog = ({image, title, content,date, type ,link}) => {
+
+const SubBlog = ({image, title, content,date, type ,id}) => {
     return (
 
         <div className="col-6 my-3">
-            <img src={image} alt=""/>
+            <Image className="image"  cloudName="dsrdvi9rl" publicId={image}  crope="scale" />
+
+            {/* <img src={image} alt=""/> */}
             <div className="date my-3">
               
             <p><Moment format='MMMM DD, YYYY'>{date}</Moment> | {type}</p>
@@ -15,7 +20,7 @@ const SubBlog = ({image, title, content,date, type ,link}) => {
                     <div className="col-10">
                         <p>{content}
                         </p>
-                        <button className="my-2">READ MORE <i className="fas fa-arrow-right mx-1"></i></button>
+                        <Link to = {`/blog/${id}`} className="my-2 ">READ MORE <i className="fas fa-arrow-right mx-1"></i></Link>
                             
                     </div>
             </div>          

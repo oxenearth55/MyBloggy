@@ -29,7 +29,8 @@ const initialState = {
     loading: true,
     blogId: null,
     error:{},
-    success:false
+    success:false,
+    deleteSuccess: false
 }
 
 export default function(state = initialState, action){
@@ -72,6 +73,11 @@ export default function(state = initialState, action){
                 isCreated: true,
                 loading: false
             }
+        case DELETE_BLOG: 
+            return {
+                ...state,
+                deleteSuccess: true
+            }
         
         case ADD_LIKE: 
         case UNLIKE:
@@ -82,7 +88,8 @@ export default function(state = initialState, action){
         case DEFAULT_SUCCESS: 
             return {
                 ...state,
-                success: false
+                success: false,
+                deleteSuccess: false
             }
        
         case CLEAR_BLOG: 

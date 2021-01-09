@@ -60,7 +60,7 @@ router.post('/',[ //NOTE middleware
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
     await user.save();
-    // res.json(user);
+    res.json(user);
 
 
     } catch(err){ //NOTE when something wrong on the server (try function above)

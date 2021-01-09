@@ -54,8 +54,11 @@ router.post('/', [auth,upload.single('image'),
 
 //SECTION Get all blogs
 router.get('/', async (req,res) => {
+
+    let limit = req.query.limit ? parseInt(req.query.limit) : 6;
+
     try{
-        const blogs = await Blog.find().sort({date:-1}).populate('user','firstName').populate('comments.user','firstName');
+        const blogs = await Blog.find().sort({date:-1}).limit(limit).populate('user','firstName').populate('comments.user','firstName');
         res.json(blogs);
     }catch(err){
         res.status(500).send('Server get all blogs Error');

@@ -278,6 +278,15 @@ h2,p{
     width:100%;
     /* position: absolute; */
 }
+.sidebar .popular-blog .image {
+    height: 130px
+}
+
+.sidebar .popular-blog .link-popular  p{
+    font-size: 14px;
+    display: inline-block
+}
+
 
 /* SECTION Log in and register */
 .auth-image img{
@@ -404,3 +413,6 @@ h2,p{
 .comment-profile p span {
     font-size: 14px;
 }
+
+
+

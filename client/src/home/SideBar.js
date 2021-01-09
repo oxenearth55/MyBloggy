@@ -1,8 +1,15 @@
-import React from 'react';
-import {Link} from 'react-router-dom';
-import profile from '../photo/home/sidebar/profile.jpg'
-import photo from '../photo/home/section3/sec3.jpg'
-const SideBar = () => {
+import React, {Fragment} from 'react';
+import profile from '../photo/home/sidebar/profile.jpg';
+import photo from '../photo/home/section3/sec3.jpg';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import Spinner from '../components/Spinner';
+import {Image} from 'cloudinary-react';
+import Moment from 'react-moment';
+
+const SideBar = ({blog:{blogs, loading}}) => {
+
+
     return (
         <div className="sidebar">
             {/* SECTION Profile */}
@@ -71,28 +78,37 @@ const SideBar = () => {
                  </h3>
             </div>
 
-            <div className="row my-4">
-                <div className="col-6 ">
-                    <img src={photo} alt=""/> 
-                </div>
-                <div className="col-6 p-0">
-                    <div className="date">
-                        <p>December 14, 2020 | Technology</p>
+        {loading ? <Spinner/> : 
+            <Fragment>
+                {blogs.sort((a,b) => (b.likes.length > a.likes.length) ? 1 : ((a.likes.length > b.likes.length ) ? -1 : 0)).slice(0,4).map(blog => 
+                    <div className="row popular my-4">
+                    <div className="col-6 ">
+                    <Image className="image"  cloudName="dsrdvi9rl" publicId={blog.image} width="300"  crope="scale" />
                     </div>
-                    <h2 className="my-2">What is MERN Stack</h2>
+                    <div className="col-6 p-0">
+                        <div className="date">
+                        <p><Moment format='MMMM DD, YYYY'>{blog.date}</Moment> | {blog.type}</p>
+                        </div>
+                        <h2 className="my-2">{blog.topic}</h2>
+                        <Link to = {`/blog/${blog._id}`} className="my-2 link-popular"><p>READ MORE </p><i className="fas fa-arrow-right mx-1"></i></Link>
 
+
+                    </div>
+                    <div className="lineend mt-3"></div> 
                 </div>
-            </div>
+                )}
+            </Fragment>
 
                
-            <div className="lineend"></div>
-
-
+           }
+           
           </div>
-            
-            
         </div>
     )
 }
 
-export default SideBar;
+const mapStateToprops = state => ({
+    blog: state.blog
+})
+
+export default connect (mapStateToprops,{})(SideBar);

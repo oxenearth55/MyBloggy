@@ -24,9 +24,9 @@ import {
     setAlert
 } from './alert';  
 
-export const getBlogs = () => async dispatch => {
+export const getBlogs = (amount) => async dispatch => {
     try{
-        const res = await axios.get('/api/blogs');
+        const res = await axios.get(`/api/blogs?limit=${amount}`);
         dispatch({
             type: GET_BLOGS,
             payload: res.data
@@ -299,7 +299,7 @@ export const editComment = (formData,blogId, commentId) => async dispatch => {
     }
 }
 
-export const deleteBlog = (id) => async dispatch => {
+export const deleteBlog = (id, history) => async dispatch => {
     try{
         const res = await axios.delete(`/api/blogs/${id}`);
         dispatch({
@@ -307,7 +307,7 @@ export const deleteBlog = (id) => async dispatch => {
             payload: res.data
         })
         dispatch(setAlert('Delete blog success', 'success'));
-       
+        history.push('/dashboard');
 
     }catch(err){
         const error = err.response.data; 

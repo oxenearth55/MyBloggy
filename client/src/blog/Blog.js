@@ -6,9 +6,11 @@ import Header from '../components/Header';
 import {Image} from 'cloudinary-react';
 import Moment from 'react-moment';
 import Comment from './Comment';
+import { withRouter } from 'react-router-dom'
 
 
-const Blog = ({match, auth:{user} ,blog:{ blog, loading, success }, getBlog, likeBlog, unlikeBlog, editBlog, deleteBlog}) => {
+
+const Blog = ({match, auth:{user} ,blog:{ blog, loading, success }, getBlog, likeBlog, unlikeBlog, editBlog, deleteBlog, history}) => {
 
     const [edit, setEdit] = useState(false);
     const [previewSource, setPreviewSource] = useState();
@@ -90,7 +92,7 @@ const Blog = ({match, auth:{user} ,blog:{ blog, loading, success }, getBlog, lik
             <div className="d-flex justify-content-between">
                 <h2>Edit Blog</h2>
                 <div className="">  
-                    <button onClick={()=>deleteBlog(blog._id)} className='btn btn-danger'>delete
+                    <button onClick={()=>deleteBlog(blog._id, history)} className='btn btn-danger'>delete
                     <i className="fas fa-times white-text ml-2"></i>
                     
                     </button>
@@ -172,7 +174,7 @@ const Blog = ({match, auth:{user} ,blog:{ blog, loading, success }, getBlog, lik
 
         const handleSubbmitFile = (e) => {
             e.preventDefault(); //NOTE prevent from reload the page 
-            editBlog(formInfo,blog._id);
+            editBlog(formInfo,blog._id, history);
             setIsSubmit(true);
             
         }
@@ -202,4 +204,4 @@ const mapStateToProps = state => ({
     blog: state.blog,
     auth: state.auth
 });
-export default connect(mapStateToProps, { getBlog, likeBlog, unlikeBlog, editBlog, deleteBlog})(Blog);
+export default connect(mapStateToProps, { getBlog, likeBlog, unlikeBlog, editBlog, deleteBlog})(withRouter(Blog));

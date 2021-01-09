@@ -6,7 +6,7 @@ import heading from '../photo/home/heading.png'
 
 const Section1 = () => {
     return (
-        <secition className="d-flex justify-content-center  sec-1">
+        <section className="d-flex justify-content-center  sec-1">
             {/* NOTE Flex 1 */}
            <div>
                 <img className="content  m-2" src={picture} alt=""/>
@@ -35,7 +35,7 @@ const Section1 = () => {
              
            </div>
             
-        </secition>
+        </section>
     )
 }
 
