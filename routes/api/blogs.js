@@ -8,6 +8,8 @@ const {check, validationResult} = require('express-validator');
 const { json } = require('body-parser');
 const {cloudinary} = require('../../utils/cloudinary');
 const fs = require('fs');
+const cors = require('cors')
+
 
 
 //ANCHOR blog
@@ -373,8 +375,16 @@ router.put('/comment/unlike/:blogId/:commentId', auth, async (req,res) => {
     }
 })
 
+
+
 // SECTION GET Earth blogs 
-router.get('/earth/only', async (req,res) => {
+
+const corsOptions = {
+    origin: 'https://portfolio-tanawat.web.app/',
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+  }
+
+router.get('/earth/only', cors(corsOptions), async (req,res) => {
     try{
         console.log('Earth ID is' + process.env.EARTH_ID)
         const blogs =  await Blog.find().sort({date:-1}).populate('user','firstName');
