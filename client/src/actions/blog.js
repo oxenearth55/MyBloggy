@@ -106,6 +106,7 @@ export const createBlog = (formData) => async dispatch => {
         if(errors){
             errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
         }
+       
         dispatch({
             type: CREATE_ERROR,
             payload: { msg: err.response.statusText, status: err.response.status }            

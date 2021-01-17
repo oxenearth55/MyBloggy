@@ -9,6 +9,7 @@ const { json } = require('body-parser');
 const {cloudinary} = require('../../utils/cloudinary');
 const fs = require('fs');
 
+
 //ANCHOR blog
 //SECTION Create blog 
 router.post('/', [auth,upload.single('image'),
@@ -370,6 +371,23 @@ router.put('/comment/unlike/:blogId/:commentId', auth, async (req,res) => {
         console.error(err.message);
         res.status(500).send('Sever unlike comment Error');
     }
+})
+
+// SECTION GET Earth blogs 
+router.get('/earth/only', async (req,res) => {
+    try{
+        console.log('Earth ID is' + process.env.EARTH_ID)
+        const blogs =  await Blog.find().sort({date:-1}).populate('user','firstName');
+        const earthBlogs = blogs.filter(blog => blog.user._id.toString() === process.env.EARTH_ID );
+        if(earthBlogs.length === 0){
+            res.status(404).json({msg:'Blogs not found'})
+        }
+        res.json(earthBlogs)
+
+    }catch(err){
+        res.status(500).send('Server get Earth blogs Error');
+    }
+
 })
 
 
