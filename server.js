@@ -13,6 +13,12 @@ app.use(express.json({extended: false})); //NOTE Allow us to read the request.bo
 //NOTE For accepting the image file size 
 app.use(express.json({ limit: '50mb'})); 
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
+//NOTE Allow others to access api
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'https://portfolio-tanawat.web.app')
+    res.header('Access-Control-Allow-Methods',' GET')
+    next()
+  })
 
 // SECTION Routes 
  app.use('/api/users', require('./routes/api/users'));
