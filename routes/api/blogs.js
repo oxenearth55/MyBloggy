@@ -380,7 +380,7 @@ router.put('/comment/unlike/:blogId/:commentId', auth, async (req,res) => {
 // SECTION GET Earth blogs 
 
 const corsOptions = {
-    origin: 'https://portfolio-tanawat.web.app/',
+    origin: 'https://portfolio-tanawat.web.app/blogs',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
   }
 
