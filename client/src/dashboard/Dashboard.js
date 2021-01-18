@@ -96,6 +96,7 @@ const Dashboard = ({auth: { user, loading }, blog: { myBlogs, isCreated, blogId}
     const handleSubbmitFile = (e) => {
         e.preventDefault(); //NOTE prevent from reload the page 
         createBlog(formData);
+        
     }
 
 
