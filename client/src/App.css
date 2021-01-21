@@ -419,5 +419,10 @@ h2,p{
     font-size: 14px;
 }
 
+/* Pagination */
+
+.comments .pagination .page{
+    cursor: pointer;
+}
 
 

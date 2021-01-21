@@ -18,7 +18,9 @@ import {
     LIKE_COMMENT,
     UNLIKE_COMMENT,
     DEFAULT_SUCCESS,
-    DELETE_BLOG
+    DELETE_BLOG,
+    GET_COMMENTS,
+    UPDATE_PAGINATION
 } from './types';
 import {
     setAlert
@@ -30,6 +32,10 @@ export const getBlogs = (amount) => async dispatch => {
         dispatch({
             type: GET_BLOGS,
             payload: res.data
+        });
+
+        dispatch({
+            type: CLEAR_BLOG,
         });
 
         // dispatch({type: CLEAR_BLOG})
@@ -44,9 +50,13 @@ export const getBlogs = (amount) => async dispatch => {
 
 }
 
-export const getBlog = (id) => async dispatch => {
+export const getBlog = (id,pageNumber) => async dispatch => {  
+    let number = 1
+    if(pageNumber !== undefined && pageNumber !== null){
+         number = pageNumber
+    }  
     try{
-        const res = await axios.get(`/api/blogs/${id}`); 
+        const res = await axios.get(`/api/blogs/${id}/${number}`) 
         dispatch({
             type: GET_BLOG,
             payload: res.data
@@ -69,6 +79,10 @@ export const getMyBlogs = () => async dispatch => {
             type: GET_MY_BLOG,
             payload: res.data
         })
+        dispatch({
+            type: CLEAR_BLOG,
+        });
+
         
     } catch (err) {
         dispatch({
@@ -186,7 +200,7 @@ export const editBlog = (formInfo,id) => async dispatch => {
     }
 }
 
-export const createComment = (formData,id) => async dispatch => {
+export const createComment = (formData,id, comments) => async dispatch => {
     try {
         const config = {
             headers:{
@@ -194,9 +208,11 @@ export const createComment = (formData,id) => async dispatch => {
             } 
         }
         const res = await axios.put(`/api/blogs/comment/${id}`, formData, config);
+        const pagination = await getPagination(id)
+
         dispatch({
             type: CREATE_COMMENT,
-            payload: res.data
+            payload: {comment:res.data, comments: comments, pagination:pagination}
         })
         dispatch(setAlert('Create blog success', 'success'));  
         dispatch({
@@ -217,12 +233,14 @@ export const createComment = (formData,id) => async dispatch => {
     }
 }
 
-export const likeComment = (blogId, commentId) => async dispatch => {
+export const likeComment = (blogId, commentId, comments) => async dispatch => {
     try {     
         const res = await axios.put(`/api/blogs/comment/like/${blogId}/${commentId}`);
+        const pagination = await getPagination(blogId)
+
         dispatch({
             type: LIKE_COMMENT, 
-            payload: res.data
+            payload: {comment:res.data, comments: comments, pagination:pagination}
         })
         dispatch(setAlert('Like comment success', 'success'));
         dispatch({
@@ -241,12 +259,14 @@ export const likeComment = (blogId, commentId) => async dispatch => {
     }
 }
 
-export const unlikeComment = (blogId, commentId) => async dispatch => {
+export const unlikeComment = (blogId, commentId, comments) => async dispatch => {
     try {     
         const res = await axios.put(`/api/blogs/comment/unlike/${blogId}/${commentId}`);
+        const pagination = await getPagination(blogId)
+
         dispatch({
             type: UNLIKE_COMMENT, 
-            payload: res.data
+            payload: {comment:res.data, comments: comments, pagination:pagination}
         })
         dispatch(setAlert('Unlike comment success', 'success'));
         dispatch({
@@ -265,7 +285,7 @@ export const unlikeComment = (blogId, commentId) => async dispatch => {
     }
 }
 
-export const editComment = (formData,blogId, commentId) => async dispatch => {
+export const editComment = (formData,blogId, commentId, comments) => async dispatch => {
     try {
 
         const config = {
@@ -274,9 +294,11 @@ export const editComment = (formData,blogId, commentId) => async dispatch => {
             } 
         }
         const res = await axios.put(`/api/blogs/comment/edit/${blogId}/${commentId}`,formData, config);
+        const pagination = await getPagination(blogId)
+
         dispatch({
             type:EDIT_COMMENT,
-            payload: res.data
+            payload: {comment:res.data, comments: comments, pagination:pagination}
         })
 
         dispatch(setAlert('Edit comment success', 'success'));
@@ -323,21 +345,18 @@ export const deleteBlog = (id, history) => async dispatch => {
 }
 
 
-export const deleteComment = (blogId, commentId) => async dispatch => {
+export const deleteComment = (blogId, commentId, comments) => async dispatch => {
     try{
         const res = await axios.put(`/api/blogs/comment/${blogId}/${commentId}`);
+        const pagination = await getPagination(blogId)
         dispatch({
             type: DELETE_COMMENT, 
-            payload: res.data
+            payload: {comment:commentId, comments: comments, pagination:pagination}
         })
         dispatch(setAlert('Delete comment success', 'success'));
         dispatch({
             type: DEFAULT_SUCCESS
         })     
-
-
-
-
     }catch(err){
         const error = err.response.data; 
         if(error){
@@ -348,4 +367,31 @@ export const deleteComment = (blogId, commentId) => async dispatch => {
             payload: { msg: err.response.statusText, status: err.response.status }            
         })
     }
+}
+
+
+export const getComments = (blogId, pageNumber) => async dispatch => {
+    // const pageNumber = 1
+    // if(pageNumber !== null){
+    //    return pageNumber == pageNumber
+    // }
+    try {
+        //NOTE Grab comments as an pagination
+        const res = await axios.get(`/api/blogs/pagination/page/${blogId}/${pageNumber}`)
+        const pagination = await getPagination(blogId)
+
+        dispatch({
+            type:GET_COMMENTS, 
+            payload: {comments:res.data, pagination:pagination}
+        })
+          
+    } catch (error) {
+        
+    }
+  
+}
+
+export const  getPagination = async (id) => {
+    const res = await axios.get(`/api/blogs/comment/pagination/number/${id}`)
+    return res.data
 }

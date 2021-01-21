@@ -20,7 +20,7 @@ const EditComment = ({editComment, cancleEdit, comment, blog:{blog}}) => {
 
     const onSubmit = async e => {
         e.preventDefault(); 
-        editComment(formData,blog._id,comment._id);
+        editComment(formData,blog._id,comment._id, blog.comments);
         cancleEdit()  
     }
 

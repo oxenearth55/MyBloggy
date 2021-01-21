@@ -13,7 +13,7 @@ const AddComment = ({createComment, cancleCreate,  blog:{blog}}) => {
 
     const onSubmit = async e => {
         e.preventDefault(); 
-        createComment(formData,blog._id);
+        createComment(formData,blog._id, blog.comments);
         cancleCreate()  
     }
 

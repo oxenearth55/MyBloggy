@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { getBlog, likeBlog, unlikeBlog, editBlog, deleteBlog } from '../actions/blog';
+import { getBlog, likeBlog, unlikeBlog, editBlog, deleteBlog, getComments } from '../actions/blog';
 import Spinner from '../components/Spinner';
 import Header from '../components/Header';
 import {Image} from 'cloudinary-react';

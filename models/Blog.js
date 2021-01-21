@@ -30,6 +30,9 @@ const BlogSchema = new mongoose.Schema({
     image:{
         type: String
     },
+    pagination:{
+        type: Number
+    },
        
 
     

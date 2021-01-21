@@ -3,17 +3,19 @@ import Moment from 'react-moment';
 import AddComment from './AddComment';
 import EditComment from './EditComment';
 import { connect } from 'react-redux';
-import { likeComment, getBlog, unlikeComment, deleteComment } from '../actions/blog'
+import { likeComment, getBlog, unlikeComment, deleteComment, getComments,getPagination } from '../actions/blog'
+import Pagination from './Pagination';
 
 
-const Comment = ({auth:{user}, success, blog:{blog}, likeComment, getBlog, unlikeComment, deleteComment}) => {
+const Comment = ({auth:{user}, success, blog:{blog}, likeComment, getBlog, unlikeComment, deleteComment, getComments}) => {
     const [addComment, setAddComment] = useState(false);
     // const [edit, setEdit] = useState(false);
     const [formData, setFormData] = useState({
         comment: null,
         edit:false
     })
-
+    const [pageNumber, setPageNumber] = useState(1)
+    const [pages, setPages] = useState([])
     const { comment, edit } = formData;
     const cancleCreate = () => {
         setAddComment(false);
@@ -23,12 +25,37 @@ const Comment = ({auth:{user}, success, blog:{blog}, likeComment, getBlog, unlik
         setFormData({...formData, edit:false});
     }
 
-    useEffect(() => {
+    useEffect(async () => {
         if(success == true){
-        getBlog(blog._id) //NOT wait update like comment so it will use old value
+        // getBlog(blog._id,pageNumber) //NOT wait update like comment so it will use old value
+        await getComments(blog._id, pageNumber)
+        preparePagination()
+        console.log('xxx is '+ pages )
+
+
         }
+        preparePagination()
+        console.log('Page is '+ pages)
+
 
     },[success])
+
+    function preparePagination() {
+        const array = []
+        for(let i = 1 ; i <= blog.pagination ; i++){
+            array.push(i)
+        }    
+
+        setPages(array)
+
+    }
+    function paginationChange (page) {
+        setPageNumber(page)
+        getComments(blog._id, page)
+
+
+    }
+
 
     const header = props => (
         <div className="row justify-content-center">              
@@ -66,12 +93,12 @@ const Comment = ({auth:{user}, success, blog:{blog}, likeComment, getBlog, unlik
                                 </div>
                             
                                 <div className="like-dislike ">
-                                    <i onClick={() => likeComment(blog._id,comment._id)} className ="far fa-thumbs-up green-text mx-2"><p>{comment.likes.length}</p></i>
-                                    <i onClick={() => unlikeComment(blog._id, comment._id)}  className ="far fa-thumbs-down red-text mx-2"></i>
+                                    <i onClick={() => likeComment(blog._id,comment._id,blog.comments)} className ="far fa-thumbs-up green-text mx-2"><p>{comment.likes.length}</p></i>
+                                    <i onClick={() => unlikeComment(blog._id, comment._id,blog.comments)}  className ="far fa-thumbs-down red-text mx-2"></i>
                                     {user !== null && user._id === comment.user._id &&
                                     <Fragment>
                                         <i onClick={() => setFormData({edit:true, comment:comment})} className="far  fa-edit mx-2 orange-text"></i>  
-                                        <i onClick={() => deleteComment(blog._id, comment._id)} className="far fa-trash-alt mx-2 red-text"></i> 
+                                        <i onClick={() => deleteComment(blog._id, comment._id, blog.comments)} className="far fa-trash-alt mx-2 red-text"></i> 
                                     </Fragment>
                                      
                                       }
@@ -101,7 +128,22 @@ const Comment = ({auth:{user}, success, blog:{blog}, likeComment, getBlog, unlik
                 {edit && <div className="container my-5">
                          <EditComment cancleEdit={cancleEdit} comment={comment}/>
                          </div> }
-                    {comments()}        
+                    {comments()}
+                  
+                    <div className="d-flex justify-content-center pagination">
+                    <div className="mx-4">
+                        Select Page
+
+                    </div>
+
+                        {pages.map(page => 
+                           
+                             <Pagination paginationChange={paginationChange}  page={page}/>
+                         
+                        )}
+                       
+                    </div>
+
             </div>                   
         </div>
     )
@@ -111,4 +153,4 @@ const mapStateToProps = state => ({
     auth: state.auth
 })
 
-export default connect(mapStateToProps,{ likeComment, getBlog, unlikeComment, deleteComment })(Comment);
+export default connect(mapStateToProps,{ likeComment, getBlog, unlikeComment, deleteComment, getComments })(Comment);

@@ -61,7 +61,8 @@ router.get('/', async (req,res) => {
     let limit = req.query.limit ? parseInt(req.query.limit) : 6;
 
     try{
-        const blogs = await Blog.find().sort({date:-1}).limit(limit).populate('user','firstName').populate('comments.user','firstName');
+        // .populate('comments.user','firstName');
+        const blogs = await Blog.find().sort({date:-1}).limit(limit).populate('user','firstName').select('-comments');
         res.json(blogs);
     }catch(err){
         res.status(500).send('Server get all blogs Error');
@@ -69,9 +70,34 @@ router.get('/', async (req,res) => {
 });
 
 //SECTION Get a blog by id
-router.get('/:id', async (req, res) => {
+router.get('/:id/:pageNumber', async (req, res) => {
     try{
         const blog = await Blog.findById(req.params.id).populate('user','name').populate('comments.user');
+        // NOTE Assign only 5 comments inside blog
+        
+        //  const comments = blog.comments
+        //  const array = []
+        //  const totalPage = comments.length/5 
+        //  const size = 5
+        //  for(let i = 0; i < size; i++){
+        //      array.push(comments[i])
+        //  } 
+        //NOTE get a blog by id
+        const comments = blog.comments
+        const array = []
+        const pageNumber = req.params.pageNumber
+        const totalPagination = Math.ceil(comments.length/5)
+        //NOTE staring point of an comments, 5 is a number of comments that will be returned
+        const initial = (( pageNumber - 1 ) * 5) + 1 
+        console.log('initial is '+ initial)
+        const size = pageNumber * 5
+
+        for(let i = initial; i <= size; i++){
+            array.push(comments[i-1])
+        } 
+
+        blog.comments = array
+        blog.pagination = totalPagination
         res.json(blog);
     }catch(err){
         if(err.kind == 'ObjectId'){ //NOTE if can not find blog id in database 
@@ -244,7 +270,7 @@ router.put('/comment/:id',[auth,
         blog.comments.unshift(newComment);
         // console.log(blog.comments[1].user.name)
         blog.save();
-        res.json(blog.comments);
+        res.json(blog.comments[0]);
 
     }catch(err){
         console.error(err.message);
@@ -273,7 +299,7 @@ async (req, res) => {
         if(comment.user.toString() === req.user.id){
             comment.text = text; 
             await blog.save();
-            res.json(blog.comments);
+            res.json(blog.comment);
           
         }else{
             res.status(401).json({msg: 'Unauthorized to edit this blog'})
@@ -288,7 +314,21 @@ async (req, res) => {
 
 })
 
+// SECTION Get pagination 
+router.get('/comment/pagination/number/:id', async (req,res) => {
+    try {
+        const blog = await Blog.findById(req.params.id) 
+        const comments = blog.comments
+        const totalPagination = Math.ceil(comments.length/5)
+      
+        res.json(totalPagination)
 
+        
+    } catch (error) {
+        res.status(500).send('Server Get Pagination Error')   
+    }
+    
+})
 
 //SECTION Delete the comment 
 router.put('/comment/:blogId/:commentId', auth ,async (req, res) => {
@@ -339,7 +379,7 @@ router.put('/comment/like/:blogId/:commentId', auth, async (req,res) => {
 
         comment.likes.unshift({user: req.user.id});
         blog.save();
-        res.json(blog.comments);
+        res.json(blog.comment);
 
 
     }catch(err){
@@ -366,13 +406,41 @@ router.put('/comment/unlike/:blogId/:commentId', auth, async (req,res) => {
         const indexOfUnlike = comment.likes.map(like => like.user.toString()).indexOf(req.user.id);
         comment.likes.splice(indexOfUnlike, 1); 
         blog.save();
-        res.json(blog.comments);
+        res.json(blog.comment);
 
 
     }catch(err){
         console.error(err.message);
         res.status(500).send('Sever unlike comment Error');
     }
+})
+
+//SECTION Comment pagination 
+router.get('/pagination/page/:blogId/:pageNumber', async (req,res) => {
+    try {
+        //NOTE get a blog by id
+        const blog = await Blog.findById(req.params.blogId).populate('comments.user');
+        const comments = blog.comments
+        const array = []
+        const pageNumber = req.params.pageNumber
+        //NOTE staring point of an comments, 5 is a number of comments that will be returned
+        const initial = (( pageNumber - 1 ) * 5) + 1 
+        console.log('initial is '+ initial)
+        const size = pageNumber * 5
+
+        for(let i = initial; i <= size; i++){
+            if(comments[i-1] !== undefined){
+            array.push(comments[i-1])
+            }
+        } 
+
+        res.json(array)
+
+        
+    } catch (err) {
+        res.status(500).send('Server pagiantion Error')
+    }
+
 })
 
 
@@ -387,7 +455,7 @@ const corsOptions = {
 router.get('/earth/only', cors(corsOptions), async (req,res) => {
     try{
         console.log('Earth ID is' + process.env.EARTH_ID)
-        const blogs =  await Blog.find().sort({date:-1}).populate('user','firstName');
+        const blogs =  await Blog.find().sort({date:-1}).populate('user','name').populate('comments.user');
         const earthBlogs = blogs.filter(blog => blog.user._id.toString() === process.env.EARTH_ID );
         if(earthBlogs.length === 0){
             res.status(404).json({msg:'Blogs not found'})

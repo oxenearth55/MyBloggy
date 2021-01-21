@@ -18,7 +18,9 @@ import {
     LIKE_COMMENT,
     UNLIKE_COMMENT,
     DEFAULT_SUCCESS,
-    DELETE_BLOG
+    DELETE_BLOG,
+    GET_COMMENTS,
+    UPDATE_PAGINATION
 } from '../actions/types';
 
 const initialState = {
@@ -50,15 +52,37 @@ export default function(state = initialState, action){
                 blog: payload,
                 loading: false
             };
+        case GET_COMMENTS: 
+            return {
+                ...state,
+                blog: {...state.blog, pagination:payload.pagination ,comments:payload.comments}
+            }
         case CREATE_COMMENT:
         case LIKE_COMMENT:
         case UNLIKE_COMMENT:
         case EDIT_COMMENT:
-        case DELETE_COMMENT:
             return {
                 ...state,
-                blog: {...state.blog, comments: payload},
+                // NOTE update comments related to the current comments ( pagination )
+                // comments is comments that are in the current page (pagination)
+                // Update only the comment that match the condition
+                // remain comennts are the same as before updating 
+                blog: {...state.blog, pagination:payload.pagination ,comments: payload.comments.map(comment => comment._id ===
+                     payload.comment._id ?
+                     comment = payload.comment : comment )},
                 success: true
+            }
+        case DELETE_COMMENT: 
+            return{
+                ...state,
+                // NOTE update comments related to the current comments ( pagination )
+                // comments is comments that are in the current page (pagination)
+                // Update only the comment that match the condition
+                // remain comennts are the same as before updating 
+                blog: {...state.blog, pagination:payload.pagination, comments: payload.comments.filter(comment => comment._id !==
+                     payload.comment)},
+                success: true
+
             }
         case GET_MY_BLOG:
             return {
