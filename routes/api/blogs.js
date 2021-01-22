@@ -109,7 +109,7 @@ router.get('/:id/:pageNumber', async (req, res) => {
 });
 
 //SECTION Get blogs by user Id 
-router.get('/get/myblogs', auth , async (req, res) => {
+router.get('/get/all/myblogs', auth , async (req, res) => {
     try {
         const blog = await Blog.find().sort({date:-1});
         const myBlog = blog.filter(blog => blog.user._id.toString() === req.user.id);
@@ -270,7 +270,8 @@ router.put('/comment/:id',[auth,
         blog.comments.unshift(newComment);
         // console.log(blog.comments[1].user.name)
         blog.save();
-        res.json(blog.comments[0]);
+    
+        res.json('Create Comment Success');
 
     }catch(err){
         console.error(err.message);
@@ -320,8 +321,12 @@ router.get('/comment/pagination/number/:id', async (req,res) => {
         const blog = await Blog.findById(req.params.id) 
         const comments = blog.comments
         const totalPagination = Math.ceil(comments.length/5)
+        const array = [] 
+        for(let i = 1 ; i <= totalPagination; i++){
+            array.push(i)
+        }
       
-        res.json(totalPagination)
+        res.json(array)
 
         
     } catch (error) {

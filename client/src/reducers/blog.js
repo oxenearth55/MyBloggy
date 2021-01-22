@@ -52,38 +52,50 @@ export default function(state = initialState, action){
                 blog: payload,
                 loading: false
             };
+        //NOTE Update comments after create, like, unlike, edit the comment 
         case GET_COMMENTS: 
             return {
                 ...state,
-                blog: {...state.blog, pagination:payload.pagination ,comments:payload.comments}
+                blog: {...state.blog, pagination:payload.pagination ,comments:payload.comments},
+                // success: true
             }
-        case CREATE_COMMENT:
-        case LIKE_COMMENT:
-        case UNLIKE_COMMENT:
+        // case EDIT_COMMENT:
+        //     return {
+        //         ...state,
+        //         // NOTE update comments related to the current comments ( pagination )
+        //         // comments is comments that are in the current page (pagination)
+        //         // Update only the comment that match the condition
+        //         // remain comennts are the same as before updating 
+        //         blog: {...state.blog, pagination:payload.pagination ,comments: payload.comments.map(comment => comment._id ===
+        //              payload.comment._id ?
+        //              comment = payload.comment : comment )},
+        //         success: true
+        //     }
+
         case EDIT_COMMENT:
+        case CREATE_COMMENT:
+        case UNLIKE_COMMENT:    
+        case LIKE_COMMENT:
+        case DELETE_COMMENT: 
             return {
                 ...state,
-                // NOTE update comments related to the current comments ( pagination )
-                // comments is comments that are in the current page (pagination)
-                // Update only the comment that match the condition
-                // remain comennts are the same as before updating 
-                blog: {...state.blog, pagination:payload.pagination ,comments: payload.comments.map(comment => comment._id ===
-                     payload.comment._id ?
-                     comment = payload.comment : comment )},
-                success: true
+                success:true
             }
-        case DELETE_COMMENT: 
-            return{
-                ...state,
-                // NOTE update comments related to the current comments ( pagination )
-                // comments is comments that are in the current page (pagination)
-                // Update only the comment that match the condition
-                // remain comennts are the same as before updating 
-                blog: {...state.blog, pagination:payload.pagination, comments: payload.comments.filter(comment => comment._id !==
-                     payload.comment)},
-                success: true
+            
 
-            }
+
+        // case DELETE_COMMENT: 
+        //     return{
+        //         ...state,
+        //         // NOTE update comments related to the current comments ( pagination )
+        //         // comments is comments that are in the current page (pagination)
+        //         // Update only the comment that match the condition
+        //         // remain comennts are the same as before updating 
+        //         blog: {...state.blog, pagination:payload.pagination, comments: payload.comments.filter(comment => comment._id !==
+        //              payload.comment)},
+        //         success: true
+
+        //     }
         case GET_MY_BLOG:
             return {
                 ...state, 

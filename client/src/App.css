@@ -425,4 +425,10 @@ h2,p{
     cursor: pointer;
 }
 
+.comments .pagination .page .page-num{
+    color: blue;
+    background-color:rgba(0, 0, 255, 0.267);
+}
+
+
 

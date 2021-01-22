@@ -25,34 +25,29 @@ const Comment = ({auth:{user}, success, blog:{blog}, likeComment, getBlog, unlik
         setFormData({...formData, edit:false});
     }
 
-    useEffect(async () => {
-        if(success == true){
-        // getBlog(blog._id,pageNumber) //NOT wait update like comment so it will use old value
-        await getComments(blog._id, pageNumber)
-        preparePagination()
-        console.log('xxx is '+ pages )
-
-
+    useEffect(() => {
+        if(success === true){
+        getComments(blog._id,pageNumber) //NOTE wait update like comment so it will use old value
+        // preparePagination()
+                     
+        
         }
-        preparePagination()
-        console.log('Page is '+ pages)
 
 
     },[success])
 
-    function preparePagination() {
+      function  preparePagination() {
         const array = []
         for(let i = 1 ; i <= blog.pagination ; i++){
             array.push(i)
         }    
 
-        setPages(array)
-
+         setPages(array)
     }
+
     function paginationChange (page) {
         setPageNumber(page)
         getComments(blog._id, page)
-
 
     }
 
@@ -93,8 +88,8 @@ const Comment = ({auth:{user}, success, blog:{blog}, likeComment, getBlog, unlik
                                 </div>
                             
                                 <div className="like-dislike ">
-                                    <i onClick={() => likeComment(blog._id,comment._id,blog.comments)} className ="far fa-thumbs-up green-text mx-2"><p>{comment.likes.length}</p></i>
-                                    <i onClick={() => unlikeComment(blog._id, comment._id,blog.comments)}  className ="far fa-thumbs-down red-text mx-2"></i>
+                                    <i onClick={() => likeComment(blog._id,comment._id)} className ="far fa-thumbs-up green-text mx-2"><p>{comment.likes.length}</p></i>
+                                    <i onClick={() => unlikeComment(blog._id, comment._id)}  className ="far fa-thumbs-down red-text mx-2"></i>
                                     {user !== null && user._id === comment.user._id &&
                                     <Fragment>
                                         <i onClick={() => setFormData({edit:true, comment:comment})} className="far  fa-edit mx-2 orange-text"></i>  
@@ -132,13 +127,13 @@ const Comment = ({auth:{user}, success, blog:{blog}, likeComment, getBlog, unlik
                   
                     <div className="d-flex justify-content-center pagination">
                     <div className="mx-4">
-                        Select Page
+                        {blog.comments.length!==0 && 'Select Page'}
 
                     </div>
 
-                        {pages.map(page => 
+                        {blog.pagination.map(page => 
                            
-                             <Pagination paginationChange={paginationChange}  page={page}/>
+                             <Pagination paginationChange={paginationChange} pageNumber={pageNumber}  page={page}/>
                          
                         )}
                        
