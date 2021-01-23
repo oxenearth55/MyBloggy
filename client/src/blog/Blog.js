@@ -77,7 +77,7 @@ const Blog = ({match, auth:{user} ,blog:{ blog, loading, success }, getBlog, lik
                                 <Image className="image"  cloudName="dsrdvi9rl" publicId={blog.image}  crope="scale" />
                             </div>        
                         </div>
-                        {/* <p>{blog.content}</p> */}
+                        <p>{blog.content}</p>
                     </div>
                     
                     <Comment blog={blog} success={success}/>
