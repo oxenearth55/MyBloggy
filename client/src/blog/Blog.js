@@ -7,6 +7,7 @@ import {Image} from 'cloudinary-react';
 import Moment from 'react-moment';
 import Comment from './Comment';
 import { withRouter } from 'react-router-dom'
+import { text } from 'body-parser';
 
 
 
@@ -20,33 +21,37 @@ const Blog = ({match, auth:{user} ,blog:{ blog, loading, success }, getBlog, lik
         type: '',
         content:'',
         image:null,
-        formData: new FormData()
+        // formData: new FormData()
     });
+    const [test, setTest] = useState('')
 
     const {topic, type, content, image, formData } = formInfo;
 
     useEffect(() => {
        init();
-    },[edit])
+    },[])
     
+
+
     //NOTE Prevent props of undefined 
     const init = async () => {
-        await getBlog(match.params.id);
+        const res = await getBlog(match.params.id)
+       
         await getComments(match.params.id,1)
 
-
-        if(blog !== null){
-            setFormInfo({...formInfo, 
-                topic: blog.topic, 
-                type: blog.type, 
-                content: blog.content
-            })
-            formData.set('topic', blog.topic);
-            formData.set('type', blog.type);
-            formData.set('content', blog.content);
-
-
+   
+        setFormInfo((prevState) => {
+            return{
+                ...formInfo,
+                topic: res.topic, 
+                type: res.type, 
+                content: res.content 
+            }
         }
+        
+        )
+          
+        
     }
 
     //SECTION Blog
@@ -143,13 +148,10 @@ const Blog = ({match, auth:{user} ,blog:{ blog, loading, success }, getBlog, lik
         if(name == 'image'){
               //NOTE Create an instance of FileReader API
               setFormInfo({...formInfo, [name]: value});
-              formData.set(name, value);
               console.log('image is '+ formInfo.image);
               previewFile(value);
         }else{
             setFormInfo({...formInfo, [name]: value});
-            formData.set(name, value);   
-            console.log('topic is '+ formData.get('topic'));
 
             }
         }

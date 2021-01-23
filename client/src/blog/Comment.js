@@ -28,11 +28,8 @@ const Comment = ({auth:{user}, success, blog:{blog}, likeComment, getBlog, unlik
     useEffect(() => {
         if(success === true){
         getComments(blog._id,pageNumber) //NOTE wait update like comment so it will use old value
-        // preparePagination()
-                     
-        
+        // preparePagination()  
         }
-
 
     },[success])
 

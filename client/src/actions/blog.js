@@ -55,6 +55,7 @@ export const getBlog = (id,pageNumber) => async dispatch => {
     if(pageNumber !== undefined && pageNumber !== null){
          number = pageNumber
     }  
+
     try{
         const res = await axios.get(`/api/blogs/${id}/${number}`) 
         const pagination = await getPagination(id)
@@ -63,7 +64,10 @@ export const getBlog = (id,pageNumber) => async dispatch => {
             type: GET_BLOG,
             payload: res.data
         })
-        // dispatch({type: CLEAR_CREATED })
+        //NOTE Return data back
+        return res.data
+
+
 
     }catch(err){
         dispatch({
@@ -72,6 +76,7 @@ export const getBlog = (id,pageNumber) => async dispatch => {
         })
 
     }
+
 }
 
 export const getMyBlogs = () => async dispatch => {
