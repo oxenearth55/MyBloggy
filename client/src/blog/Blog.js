@@ -10,7 +10,7 @@ import { withRouter } from 'react-router-dom'
 
 
 
-const Blog = ({match, auth:{user} ,blog:{ blog, loading, success }, getBlog, likeBlog, unlikeBlog, editBlog, deleteBlog, history}) => {
+const Blog = ({match, auth:{user} ,blog:{ blog, loading, success }, getBlog, likeBlog, unlikeBlog, editBlog, deleteBlog, history, getComments}) => {
 
     const [edit, setEdit] = useState(false);
     const [previewSource, setPreviewSource] = useState();
@@ -26,12 +26,15 @@ const Blog = ({match, auth:{user} ,blog:{ blog, loading, success }, getBlog, lik
     const {topic, type, content, image, formData } = formInfo;
 
     useEffect(() => {
-       getBlog(match.params.id);
        init();
     },[edit])
     
     //NOTE Prevent props of undefined 
-    const init = () => {
+    const init = async () => {
+        await getBlog(match.params.id);
+        await getComments(match.params.id,1)
+
+
         if(blog !== null){
             setFormInfo({...formInfo, 
                 topic: blog.topic, 
@@ -74,7 +77,7 @@ const Blog = ({match, auth:{user} ,blog:{ blog, loading, success }, getBlog, lik
                                 <Image className="image"  cloudName="dsrdvi9rl" publicId={blog.image}  crope="scale" />
                             </div>        
                         </div>
-                        <p>{blog.content}</p>
+                        {/* <p>{blog.content}</p> */}
                     </div>
                     
                     <Comment blog={blog} success={success}/>
@@ -194,4 +197,4 @@ const mapStateToProps = state => ({
     blog: state.blog,
     auth: state.auth
 });
-export default connect(mapStateToProps, { getBlog, likeBlog, unlikeBlog, editBlog, deleteBlog})(withRouter(Blog));
+export default connect(mapStateToProps, { getBlog, likeBlog, unlikeBlog, editBlog, deleteBlog, getComments})(withRouter(Blog));

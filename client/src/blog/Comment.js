@@ -67,7 +67,7 @@ const Comment = ({auth:{user}, success, blog:{blog}, likeComment, getBlog, unlik
     )
     const comments = props => (
         <Fragment>
-            {blog !== null && blog.comments.map(comment => 
+            {blog !== null && blog.comments !== null && blog.comments.map(comment => 
                 <div className="row justify-content-center my-4">            
                     <div className="col-lg-4 col-sm-12 ml-4 comment-profile">
                         <div className="d-flex justify-content-between border">

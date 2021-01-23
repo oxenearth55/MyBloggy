@@ -175,7 +175,7 @@ export const unlikeBlog = (id) => async dispatch => {
     }
 }
 
-export const editBlog = (formInfo,id) => async dispatch => {
+export const editBlog = (formInfo,id, history) => async dispatch => {
     try {
         const config = {
             headers:{
@@ -188,6 +188,9 @@ export const editBlog = (formInfo,id) => async dispatch => {
             payload: res.data
         })
         dispatch(setAlert('Update blog success', 'success'));
+        history.push('/dashboard');
+
+
         
     } catch (err) {
         const errors = err.response.data.errors

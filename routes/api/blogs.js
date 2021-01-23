@@ -96,9 +96,10 @@ router.get('/:id/:pageNumber', async (req, res) => {
             array.push(comments[i-1])
         } 
 
-        blog.comments = array
+        // blog.comments = array
         blog.pagination = totalPagination
         res.json(blog);
+
     }catch(err){
         if(err.kind == 'ObjectId'){ //NOTE if can not find blog id in database 
             return res.status(404).json({msg: 'Blog not found'});
